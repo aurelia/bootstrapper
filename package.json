@@ -1,0 +1,55 @@
+{
+  "name": "aurelia-bootstrapper",
+  "version": "0.0.1",
+  "description": "Sets up the default configuration for the aurelia framework and gets you up and running quick and easy.",
+  "keywords": [
+    "aurelia",
+    "bootstrapper",
+    "spa"
+  ],
+  "homepage": "http://aurelia.io",
+  "bugs": {
+    "url": "https://github.com/aurelia/bootstrapper/issues"
+  },
+  "license": "MIT",
+  "author": "Rob Eisenberg <rob@bluespire.com> (http://robeisenberg.com/)",
+  "main": "dist/commonjs/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/aurelia/bootstrapper"
+  },
+  "jspm": {
+    "main": "amd/index",
+    "directories": {
+      "lib": "dist"
+    },
+    "dependencies": {
+      "aurelia-framework": "github:aurelia/framework@^0.0.1",
+      "aurelia-history": "github:aurelia/history@^0.0.1",
+      "aurelia-history-browser": "github:aurelia/history-browser@^0.0.1",
+      "aurelia-loader-systemjs": "github:aurelia/loader-systemjs@master",
+      "aurelia-logging-console": "github:aurelia/logging-console@^0.0.1",
+      "aurelia-router": "github:aurelia/router@^0.0.1",
+      "aurelia-templating-binding": "github:aurelia/templating-binding@^0.0.1",
+      "aurelia-templating-resources": "github:aurelia/templating-resources@^0.0.1",
+      "aurelia-templating-router": "github:aurelia/templating-router@^0.0.1"
+    }
+  },
+  "devDependencies": {
+    "conventional-changelog": "0.0.11",
+    "gulp": "^3.8.10",
+    "gulp-6to5": "^1.0.2",
+    "gulp-clean": "^0.3.1",
+    "gulp-jshint": "^1.9.0",
+    "gulp-yuidoc": "^0.1.2",
+    "jasmine-core": "^2.1.3",
+    "jshint-stylish": "^1.0.0",
+    "karma": "^0.12.28",
+    "karma-6to5-preprocessor": "^0.1.3",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-jasmine": "^0.3.2",
+    "karma-jspm": "^1.0.1",
+    "object.assign": "^1.0.3",
+    "run-sequence": "^1.0.2"
+  }
+}
