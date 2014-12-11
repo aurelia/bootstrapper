@@ -1,6 +1,6 @@
 {
   "name": "aurelia-bootstrapper",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Sets up the default configuration for the aurelia framework and gets you up and running quick and easy.",
   "keywords": [
     "aurelia",
@@ -16,7 +16,7 @@
   "main": "dist/commonjs/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/aurelia/bootstrapper"
+    "url": "http://github.com/aurelia/bootstrapper"
   },
   "jspm": {
     "main": "amd/index",
@@ -24,15 +24,15 @@
       "lib": "dist"
     },
     "dependencies": {
-      "aurelia-framework": "github:aurelia/framework@^0.0.1",
-      "aurelia-history": "github:aurelia/history@^0.0.1",
-      "aurelia-history-browser": "github:aurelia/history-browser@^0.0.1",
-      "aurelia-loader-systemjs": "github:aurelia/loader-systemjs@master",
-      "aurelia-logging-console": "github:aurelia/logging-console@^0.0.1",
-      "aurelia-router": "github:aurelia/router@^0.0.1",
-      "aurelia-templating-binding": "github:aurelia/templating-binding@^0.0.1",
-      "aurelia-templating-resources": "github:aurelia/templating-resources@^0.0.1",
-      "aurelia-templating-router": "github:aurelia/templating-router@^0.0.1"
+      "aurelia-framework": "^0.1.0",
+      "aurelia-history": "^0.1.0",
+      "aurelia-history-browser": "^0.1.0",
+      "aurelia-loader-systemjs": "^0.1.0",
+      "aurelia-logging-console": "^0.1.0",
+      "aurelia-router": "^0.1.0",
+      "aurelia-templating-binding": "^0.1.0",
+      "aurelia-templating-resources": "^0.1.0",
+      "aurelia-templating-router": "^0.1.0"
     }
   },
   "devDependencies": {
