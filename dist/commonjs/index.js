@@ -20,6 +20,7 @@ var SelectedItem = require('aurelia-templating-resources').SelectedItem;
 
 
 var defaultResources = [Show, If, Repeat, Compose, RouterViewPort, SelectedItem];
+var logger = LogManager.getLogger("bootstrapper");
 
 function ready(global) {
   return new Promise(function (resolve, reject) {
@@ -35,6 +36,43 @@ function ready(global) {
       global.removeEventListener("load", completed, false);
       resolve(global.document);
     }
+  });
+}
+
+function loadPolyfills() {
+  return System.normalize("aurelia-bootstrapper").then(function (bootstrapperName) {
+    return System.normalize("aurelia-framework", bootstrapperName).then(function (frameworkName) {
+      System.map["aurelia-framework"] = frameworkName;
+
+      return System.normalize("aurelia-loader", frameworkName).then(function (loaderName) {
+        var toLoad = [];
+
+        logger.debug("loading the es6-shim polyfill");
+        toLoad.push(System.normalize("es6-shim", loaderName).then(function (name) {
+          return System["import"](name);
+        }));
+
+        toLoad.push(System.normalize("aurelia-router", bootstrapperName).then(function (name) {
+          System.map["aurelia-router"] = name;
+        }));
+
+        if (!("import" in document.createElement("link"))) {
+          logger.debug("loading the HTMLImports polyfill");
+          toLoad.push(System.normalize("webcomponentsjs/HTMLImports.min", loaderName).then(function (name) {
+            return System["import"](name);
+          }));
+        }
+
+        if (!("content" in document.createElement("template"))) {
+          logger.debug("loading the HTMLTemplateElement polyfill");
+          toLoad.push(System.normalize("aurelia-html-template-element", loaderName).then(function (name) {
+            return System["import"](name);
+          }));
+        }
+
+        return Promise.all(toLoad);
+      });
+    });
   });
 }
 
@@ -78,13 +116,15 @@ function run() {
       LogManager.setLevel(LogManager.levels.debug);
     }
 
-    for (i = 0, ii = mainHost.length; i < ii; ++i) {
-      handleMain(mainHost[i]);
-    }
+    return loadPolyfills().then(function () {
+      for (i = 0, ii = mainHost.length; i < ii; ++i) {
+        handleMain(mainHost[i]);
+      }
 
-    for (i = 0, ii = appHost.length; i < ii; ++i) {
-      handleApp(appHost[i]);
-    }
+      for (i = 0, ii = appHost.length; i < ii; ++i) {
+        handleApp(appHost[i]);
+      }
+    });
   });
 }
 

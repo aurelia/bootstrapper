@@ -1,3 +1,16 @@
+## 0.3.0 (2014-12-12)
+
+
+#### Bug Fixes
+
+* **package:** update dependencies to latest versions ([24d6d675](http://github.com/aurelia/bootstrapper/commit/24d6d6751086da93d2f00201bdf4afe7f2ad5423))
+
+
+#### Features
+
+* **polyfills:** automatically detect and load polyfills as needed ([f57132c8](http://github.com/aurelia/bootstrapper/commit/f57132c8849b626e95fd7546b10ae6cdb6b65a93))
+
+
 ## 0.2.0 (2014-12-11)
 
 
