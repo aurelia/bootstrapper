@@ -11,7 +11,7 @@ define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logg
   var Router = _aureliaRouter.Router;
   var AppRouter = _aureliaRouter.AppRouter;
   var TemplatingRouteLoader = _aureliaTemplatingRouter.TemplatingRouteLoader;
-  var RouterViewPort = _aureliaTemplatingRouter.RouterViewPort;
+  var RouterView = _aureliaTemplatingRouter.RouterView;
   var TemplatingBindingLanguage = _aureliaTemplatingBinding.TemplatingBindingLanguage;
   var Show = _aureliaTemplatingResources.Show;
   var If = _aureliaTemplatingResources.If;
@@ -20,7 +20,7 @@ define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logg
   var SelectedItem = _aureliaTemplatingResources.SelectedItem;
 
 
-  var defaultResources = [Show, If, Repeat, Compose, RouterViewPort, SelectedItem];
+  var defaultResources = [Show, If, Repeat, Compose, RouterView, SelectedItem];
   var logger = LogManager.getLogger("bootstrapper");
 
   function ready(global) {

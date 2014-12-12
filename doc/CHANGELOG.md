@@ -1,3 +1,11 @@
+### 0.3.1 (2014-12-12)
+
+
+#### Bug Fixes
+
+* **bootstrapped:** bad import name for RouterView ([6590f2cf](http://github.com/aurelia/bootstrapper/commit/6590f2cf772d493763d0deac81647282d02edc1a))
+
+
 ## 0.3.0 (2014-12-12)
 
 

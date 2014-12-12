@@ -4,11 +4,11 @@ import {ConsoleAppender} from 'aurelia-logging-console';
 import {History} from 'aurelia-history';
 import {BrowserHistory} from 'aurelia-history-browser';
 import {RouteLoader, Router, AppRouter} from 'aurelia-router';
-import {TemplatingRouteLoader,RouterViewPort} from 'aurelia-templating-router';
+import {TemplatingRouteLoader,RouterView} from 'aurelia-templating-router';
 import {TemplatingBindingLanguage} from 'aurelia-templating-binding';
 import {Show, If, Repeat, Compose, SelectedItem} from 'aurelia-templating-resources';
 
-var defaultResources = [Show, If, Repeat, Compose, RouterViewPort, SelectedItem];
+var defaultResources = [Show, If, Repeat, Compose, RouterView, SelectedItem];
 var logger = LogManager.getLogger('bootstrapper');
 
 function ready(global) {

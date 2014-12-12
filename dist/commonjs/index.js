@@ -10,7 +10,7 @@ var RouteLoader = require('aurelia-router').RouteLoader;
 var Router = require('aurelia-router').Router;
 var AppRouter = require('aurelia-router').AppRouter;
 var TemplatingRouteLoader = require('aurelia-templating-router').TemplatingRouteLoader;
-var RouterViewPort = require('aurelia-templating-router').RouterViewPort;
+var RouterView = require('aurelia-templating-router').RouterView;
 var TemplatingBindingLanguage = require('aurelia-templating-binding').TemplatingBindingLanguage;
 var Show = require('aurelia-templating-resources').Show;
 var If = require('aurelia-templating-resources').If;
@@ -19,7 +19,7 @@ var Compose = require('aurelia-templating-resources').Compose;
 var SelectedItem = require('aurelia-templating-resources').SelectedItem;
 
 
-var defaultResources = [Show, If, Repeat, Compose, RouterViewPort, SelectedItem];
+var defaultResources = [Show, If, Repeat, Compose, RouterView, SelectedItem];
 var logger = LogManager.getLogger("bootstrapper");
 
 function ready(global) {
