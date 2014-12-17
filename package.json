@@ -24,15 +24,15 @@
       "lib": "dist"
     },
     "dependencies": {
-      "aurelia-framework": "^0.2.1",
-      "aurelia-history": "^0.1.0",
-      "aurelia-history-browser": "^0.1.0",
-      "aurelia-loader-systemjs": "^0.1.2",
-      "aurelia-logging-console": "^0.1.0",
-      "aurelia-router": "^0.1.0",
-      "aurelia-templating-binding": "^0.2.1",
-      "aurelia-templating-resources": "^0.2.1",
-      "aurelia-templating-router": "^0.3.0"
+      "aurelia-framework": "^0.3.0",
+      "aurelia-history": "^0.1.1",
+      "aurelia-history-browser": "^0.1.1",
+      "aurelia-loader-systemjs": "^0.2.0",
+      "aurelia-logging-console": "^0.1.1",
+      "aurelia-router": "^0.1.1",
+      "aurelia-templating-binding": "^0.3.0",
+      "aurelia-templating-resources": "^0.3.0",
+      "aurelia-templating-router": "^0.4.0"
     }
   },
   "devDependencies": {
