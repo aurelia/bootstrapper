@@ -1,3 +1,11 @@
+### 0.4.1 (2014-12-17)
+
+
+#### Bug Fixes
+
+* **package:** update dependencies to latest versions ([1a6ecd09](http://github.com/aurelia/bootstrapper/commit/1a6ecd0999c693ef37d64529670b0274e996af23))
+
+
 ## 0.4.0 (2014-12-17)
 
 
