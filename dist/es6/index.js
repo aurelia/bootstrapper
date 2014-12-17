@@ -75,7 +75,7 @@ function configureAurelia(aurelia){
 
 function handleMain(mainHost){
   var mainModuleId = mainHost.getAttribute('aurelia-main') || 'main';
-  var loader = new RequireJSLoader();
+  var loader = new SystemJSLoader();
   return loader.loadModule(mainModuleId)
     .then(m => {
       m.configure(configureAurelia(new Aurelia(loader)));

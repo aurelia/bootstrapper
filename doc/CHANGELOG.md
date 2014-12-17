@@ -1,3 +1,12 @@
+## 0.4.0 (2014-12-17)
+
+
+#### Bug Fixes
+
+* **bootstrapper:** invalid loader name ([562b17b3](http://github.com/aurelia/bootstrapper/commit/562b17b3f98cd52d56b3c6c73edc8b67f1dd8f9d))
+* **package:** update dependencies to latest versions ([1cb2d30e](http://github.com/aurelia/bootstrapper/commit/1cb2d30e4d75b6a59132cf607a345aaad496ff9f))
+
+
 ### 0.3.1 (2014-12-12)
 
 
