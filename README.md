@@ -16,6 +16,10 @@ This library is part of the [Aurelia](http://www.aurelia.io/) platform and conta
 * [aurelia-templating-binding](https://github.com/aurelia/templating-binding)
 * [aurelia-templating-resources](https://github.com/aurelia/templating-resources)
 
+## Used By
+
+The bootstrapper is intended to be used directly by applications only.
+
 ## Platform Support
 
 This library can be used in the **browser** only.
