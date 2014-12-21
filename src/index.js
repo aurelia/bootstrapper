@@ -91,7 +91,7 @@ function handleMain(mainHost){
 function handleApp(appHost){
   var appModuleId = appHost.getAttribute('aurelia-app') || 'app';
   return configureAurelia(new Aurelia()).start().then(a => {
-    return a.setRoot(appModuleId, null, appHost);
+    return a.setRoot(appModuleId, appHost);
   }).catch(e => {
     setTimeout(function(){ throw e; }, 0);
   });
