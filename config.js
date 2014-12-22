@@ -16,7 +16,7 @@ System.config({
     "aurelia-templating": "github:aurelia/templating@0.4.0",
     "aurelia-templating-binding": "github:aurelia/templating-binding@0.4.0",
     "aurelia-templating-resources": "github:aurelia/templating-resources@0.4.0",
-    "aurelia-templating-router": "github:aurelia/templating-router@0.5.0",
+    "aurelia-templating-router": "github:aurelia/templating-router@0.5.1",
     "github:aurelia/binding@0.1.2": {
       "aurelia-metadata": "github:aurelia/metadata@0.1.1",
       "aurelia-task-queue": "github:aurelia/task-queue@0.1.1"
@@ -65,7 +65,7 @@ System.config({
       "aurelia-templating": "github:aurelia/templating@0.4.0",
       "es6-shim": "github:paulmillr/es6-shim@0.21.1"
     },
-    "github:aurelia/templating-router@0.5.0": {
+    "github:aurelia/templating-router@0.5.1": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.1.1",
       "aurelia-metadata": "github:aurelia/metadata@0.1.1",
       "aurelia-path": "github:aurelia/path@0.3.0",
