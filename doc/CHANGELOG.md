@@ -1,3 +1,14 @@
+## 0.5.0 (2014-12-22)
+
+
+#### Bug Fixes
+
+* **bootstrapper:**
+  * update setRoot to remove transition ([98cea82e](http://github.com/aurelia/bootstrapper/commit/98cea82ec63a142c9f364b60cf56a5881a05f888))
+  * ensure that aurelia-logging-console is available ([53ef67d0](http://github.com/aurelia/bootstrapper/commit/53ef67d0eebacd7c71c78fcfcf8251906b12da14))
+* **package:** update dependencies to latest ([21c8d229](http://github.com/aurelia/bootstrapper/commit/21c8d2293fa3fa8e79d6c5e8dd36ef4760da8a9e))
+
+
 ### 0.4.3 (2014-12-18)
 
 

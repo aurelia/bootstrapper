@@ -56,6 +56,10 @@ function loadPolyfills() {
           System.map["aurelia-router"] = name;
         }));
 
+        toLoad.push(System.normalize("aurelia-logging-console", bootstrapperName).then(function (name) {
+          System.map["aurelia-logging-console"] = name;
+        }));
+
         if (!("import" in document.createElement("link"))) {
           logger.debug("loading the HTMLImports polyfill");
           toLoad.push(System.normalize("webcomponentsjs/HTMLImports.min", loaderName).then(function (name) {
@@ -95,7 +99,7 @@ function handleMain(mainHost) {
 function handleApp(appHost) {
   var appModuleId = appHost.getAttribute("aurelia-app") || "app";
   return configureAurelia(new Aurelia()).start().then(function (a) {
-    return a.setRoot(appModuleId, null, appHost);
+    return a.setRoot(appModuleId, appHost);
   })["catch"](function (e) {
     setTimeout(function () {
       throw e;
