@@ -35,6 +35,10 @@ function loadPolyfills(){
           return System.import(name);
         }));
 
+        toLoad.push(System.normalize('aurelia-depedency-injection', frameworkName).then(function(name){
+          System.map['aurelia-depedency-injection'] = name;
+        }));
+
         toLoad.push(System.normalize('aurelia-router', bootstrapperName).then(function(name){
           System.map['aurelia-router'] = name;
         }));
