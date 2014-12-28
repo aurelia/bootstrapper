@@ -73,16 +73,19 @@ function configureAurelia(aurelia){
   return System.normalize('aurelia-bootstrapper').then(function(bName){
     var toLoad = [];
 
-    toLoad.push(System.normalize('aurelia-history-browser', bName).then(name => {
-      aurelia.withPlugin(name);
+    toLoad.push(System.normalize('aurelia-history-browser', bName).then(historyBrowser => {
+      return System.normalize('aurelia-templating-router', bName).then(templatingRouter => {
+        aurelia.plugins.installRouter = function(){
+          aurelia.plugins.install(historyBrowser);
+          aurelia.plugins.install(templatingRouter);
+        };
+      });
     }));
 
     toLoad.push(System.normalize('aurelia-templating-resources', bName).then(name => {
-      aurelia.withPlugin(name);
-    }));
-
-    toLoad.push(System.normalize('aurelia-templating-router', bName).then(name => {
-      aurelia.withPlugin(name);
+      aurelia.plugins.installResources = function(){
+        aurelia.plugins.install(name);
+      }
     }));
 
     return Promise.all(toLoad);
@@ -107,6 +110,8 @@ function handleApp(appHost){
   var appModuleId = appHost.getAttribute('aurelia-app') || 'app';
   var aurelia = new Aurelia();
   return configureAurelia(aurelia).then(() => {
+    aurelia.plugins.installRouter();
+    aurelia.plugins.installResources();
     return aurelia.start()
       .then(a => { return a.setRoot(appModuleId, appHost); });
   }).catch(e => {
