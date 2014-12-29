@@ -1,7 +1,6 @@
 import {SystemJSLoader} from 'aurelia-loader-systemjs';
 import {Aurelia, LogManager} from 'aurelia-framework';
 import {ConsoleAppender} from 'aurelia-logging-console';
-import {TemplatingBindingLanguage} from 'aurelia-templating-binding';
 
 var logger = LogManager.getLogger('bootstrapper');
 
@@ -68,16 +67,22 @@ function loadPolyfills(){
 }
 
 function configureAurelia(aurelia){
-  aurelia.withBindingLanguage(TemplatingBindingLanguage);
-
   return System.normalize('aurelia-bootstrapper').then(function(bName){
     var toLoad = [];
+
+    toLoad.push(System.normalize('aurelia-templating-binding', bName).then(templatingBinding => {
+      aurelia.plugins.installBindingLanguage = function(){
+        aurelia.plugins.install(templatingBinding);
+        return this;
+      };
+    }));
 
     toLoad.push(System.normalize('aurelia-history-browser', bName).then(historyBrowser => {
       return System.normalize('aurelia-templating-router', bName).then(templatingRouter => {
         aurelia.plugins.installRouter = function(){
           aurelia.plugins.install(historyBrowser);
           aurelia.plugins.install(templatingRouter);
+          return this;
         };
       });
     }));
@@ -85,6 +90,7 @@ function configureAurelia(aurelia){
     toLoad.push(System.normalize('aurelia-templating-resources', bName).then(name => {
       aurelia.plugins.installResources = function(){
         aurelia.plugins.install(name);
+        return this;
       }
     }));
 
@@ -110,8 +116,11 @@ function handleApp(appHost){
   var appModuleId = appHost.getAttribute('aurelia-app') || 'app';
   var aurelia = new Aurelia();
   return configureAurelia(aurelia).then(() => {
-    aurelia.plugins.installRouter();
-    aurelia.plugins.installResources();
+    aurelia.plugins
+      .installBindingLanguage()
+      .installResources()
+      .installRouter();
+
     return aurelia.start()
       .then(a => { return a.setRoot(appModuleId, appHost); });
   }).catch(e => {
