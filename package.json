@@ -24,6 +24,7 @@
       "lib": "dist"
     },
     "dependencies": {
+      "aurelia-event-aggregator": "^0.1.1",
       "aurelia-framework": "^0.4.0",
       "aurelia-history": "^0.1.1",
       "aurelia-history-browser": "^0.1.1",

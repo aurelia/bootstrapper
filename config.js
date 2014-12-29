@@ -7,6 +7,7 @@ System.config({
 
 System.config({
   "map": {
+    "aurelia-event-aggregator": "github:aurelia/event-aggregator@0.1.1",
     "aurelia-framework": "github:aurelia/framework@0.4.0",
     "aurelia-history": "github:aurelia/history@0.1.1",
     "aurelia-history-browser": "github:aurelia/history-browser@0.1.1",

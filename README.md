@@ -15,6 +15,7 @@ This library is part of the [Aurelia](http://www.aurelia.io/) platform and conta
 * [aurelia-templating-router](https://github.com/aurelia/templating-router)
 * [aurelia-templating-binding](https://github.com/aurelia/templating-binding)
 * [aurelia-templating-resources](https://github.com/aurelia/templating-resources)
+* [aurelia-event-aggregator](https://github.com/aurelia/event-aggregator)
 
 ## Used By
 
