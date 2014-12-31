@@ -2,7 +2,7 @@
 
 This library is part of the [Aurelia](http://www.aurelia.io/) platform and contains the bootstrapper wich sets up the default configuration for the aurelia framework and gets you up and running quick and easy.
 
-> To keep up to date on [Aurelia](http://www.aurelia.io/), please visit and subscribe to [the official blog](http://blog.durandal.io/). If you have questions, we invite you to join us on [our Gitter Channel](https://gitter.im/Aurelia/Discuss).
+> To keep up to date on [Aurelia](http://www.aurelia.io/), please visit and subscribe to [the official blog](http://blog.durandal.io/). If you have questions, we invite you to join us on [our Gitter Channel](https://gitter.im/aurelia/discuss).
 
 ## Dependencies
 
