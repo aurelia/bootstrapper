@@ -1,13 +1,8 @@
-define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logging-console"], function (exports, _aureliaLoaderSystemjs, _aureliaFramework, _aureliaLoggingConsole) {
+System.register(["aurelia-loader-systemjs", "aurelia-framework", "aurelia-logging-console"], function (_export) {
   "use strict";
 
-  var SystemJSLoader = _aureliaLoaderSystemjs.SystemJSLoader;
-  var Aurelia = _aureliaFramework.Aurelia;
-  var LogManager = _aureliaFramework.LogManager;
-  var ConsoleAppender = _aureliaLoggingConsole.ConsoleAppender;
+  var SystemJSLoader, Aurelia, LogManager, ConsoleAppender, logger;
 
-
-  var logger = LogManager.getLogger("bootstrapper");
 
   function ready(global) {
     return new Promise(function (resolve, reject) {
@@ -167,5 +162,18 @@ define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logg
     });
   }
 
-  run();
+  return {
+    setters: [function (_aureliaLoaderSystemjs) {
+      SystemJSLoader = _aureliaLoaderSystemjs.SystemJSLoader;
+    }, function (_aureliaFramework) {
+      Aurelia = _aureliaFramework.Aurelia;
+      LogManager = _aureliaFramework.LogManager;
+    }, function (_aureliaLoggingConsole) {
+      ConsoleAppender = _aureliaLoggingConsole.ConsoleAppender;
+    }],
+    execute: function () {
+      logger = LogManager.getLogger("bootstrapper");
+      run();
+    }
+  };
 });

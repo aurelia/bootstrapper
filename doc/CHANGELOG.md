@@ -1,3 +1,22 @@
+## 0.6.0 (2015-01-06)
+
+
+#### Bug Fixes
+
+* **bootstrapper:** ensure di is available as top level import ([3f50f876](http://github.com/aurelia/bootstrapper/commit/3f50f876943ca7b75511c8542ab2bde039bf4597))
+
+
+#### Features
+
+* **bootstrapped:** switch router and resources over to plugin model ([aa93bce4](http://github.com/aurelia/bootstrapper/commit/aa93bce4e8ebf20e01128d2ce2a63201d6947c73))
+* **bootstrapper:**
+  * switch to core-js ([166c13d6](http://github.com/aurelia/bootstrapper/commit/166c13d6d8bbf86a7206be00566ded34ef9ab17d))
+  * add plugin helper for event aggregator ([6df89100](http://github.com/aurelia/bootstrapper/commit/6df8910076c8c164cceffd4a402ec7439e892edf))
+  * add plugin helper for binding language ([82a86ffc](http://github.com/aurelia/bootstrapper/commit/82a86ffcca2b3c0a3a23305e51d327244c0c5e19))
+  * add plugin helpers for router and resources ([fcb3ac34](http://github.com/aurelia/bootstrapper/commit/fcb3ac340cdf02e2ea6ad6089cac2a061d8ea1cd))
+* **build:** update compiler and switch to register module format ([b5619c13](http://github.com/aurelia/bootstrapper/commit/b5619c13ffd57f8e93741e98c8522c45ea4b381c))
+
+
 ### 0.5.2 (2014-12-22)
 
 

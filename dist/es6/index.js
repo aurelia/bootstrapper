@@ -1,14 +1,7 @@
 import {SystemJSLoader} from 'aurelia-loader-systemjs';
 import {Aurelia, LogManager} from 'aurelia-framework';
 import {ConsoleAppender} from 'aurelia-logging-console';
-import {History} from 'aurelia-history';
-import {BrowserHistory} from 'aurelia-history-browser';
-import {RouteLoader, Router, AppRouter} from 'aurelia-router';
-import {TemplatingRouteLoader,RouterView} from 'aurelia-templating-router';
-import {TemplatingBindingLanguage} from 'aurelia-templating-binding';
-import {Show, If, Repeat, Compose, SelectedItem} from 'aurelia-templating-resources';
 
-var defaultResources = [Show, If, Repeat, Compose, RouterView, SelectedItem];
 var logger = LogManager.getLogger('bootstrapper');
 
 function ready(global) {
@@ -36,9 +29,13 @@ function loadPolyfills(){
       return System.normalize('aurelia-loader', frameworkName).then(function(loaderName){
         var toLoad = [];
 
-        logger.debug('loading the es6-shim polyfill');
-        toLoad.push(System.normalize('es6-shim', loaderName).then(function(name){
+        logger.debug('loading core-js');
+        toLoad.push(System.normalize('core-js', loaderName).then(function(name){
           return System.import(name);
+        }));
+
+        toLoad.push(System.normalize('aurelia-depedency-injection', frameworkName).then(function(name){
+          System.map['aurelia-depedency-injection'] = name;
         }));
 
         toLoad.push(System.normalize('aurelia-router', bootstrapperName).then(function(name){
@@ -70,28 +67,70 @@ function loadPolyfills(){
 }
 
 function configureAurelia(aurelia){
-  return aurelia.withSingleton(RouteLoader, TemplatingRouteLoader)
-                .withSingleton(History, BrowserHistory)
-                .withSingleton(Router, AppRouter)
-                .withBindingLanguage(TemplatingBindingLanguage)
-                .withResources(defaultResources);
+  return System.normalize('aurelia-bootstrapper').then(function(bName){
+    var toLoad = [];
+
+    toLoad.push(System.normalize('aurelia-templating-binding', bName).then(templatingBinding => {
+      aurelia.plugins.installBindingLanguage = function(){
+        aurelia.plugins.install(templatingBinding);
+        return this;
+      };
+    }));
+
+    toLoad.push(System.normalize('aurelia-history-browser', bName).then(historyBrowser => {
+      return System.normalize('aurelia-templating-router', bName).then(templatingRouter => {
+        aurelia.plugins.installRouter = function(){
+          aurelia.plugins.install(historyBrowser);
+          aurelia.plugins.install(templatingRouter);
+          return this;
+        };
+      });
+    }));
+
+    toLoad.push(System.normalize('aurelia-templating-resources', bName).then(name => {
+      aurelia.plugins.installResources = function(){
+        aurelia.plugins.install(name);
+        return this;
+      }
+    }));
+
+    toLoad.push(System.normalize('aurelia-event-aggregator', bName).then(eventAggregator => {
+      System.map['aurelia-event-aggregator'] = eventAggregator;
+      aurelia.plugins.installEventAggregator = function(){
+        aurelia.plugins.install(eventAggregator);
+        return this;
+      };
+    }));
+
+    return Promise.all(toLoad);
+  });
 }
 
 function handleMain(mainHost){
-  var mainModuleId = mainHost.getAttribute('aurelia-main') || 'main';
-  var loader = new SystemJSLoader();
+  var mainModuleId = mainHost.getAttribute('aurelia-main') || 'main',
+      loader = new SystemJSLoader();
+
   return loader.loadModule(mainModuleId)
     .then(m => {
-      m.configure(configureAurelia(new Aurelia(loader)));
+      var aurelia = new Aurelia(loader);
+      return configureAurelia(aurelia).then(() => { return m.configure(aurelia); });
     }).catch(e => {
       setTimeout(function(){ throw e; }, 0);
     });
 }
 
 function handleApp(appHost){
-  var appModuleId = appHost.getAttribute('aurelia-app') || 'app';
-  return configureAurelia(new Aurelia()).start().then(a => {
-    return a.setRoot(appModuleId, appHost);
+  var appModuleId = appHost.getAttribute('aurelia-app') || 'app',
+      aurelia = new Aurelia();
+
+  return configureAurelia(aurelia).then(() => {
+    aurelia.plugins
+      .installBindingLanguage()
+      .installResources()
+      .installRouter()
+      .installEventAggregator();
+
+    return aurelia.start().then(a => { return a.setRoot(appModuleId, appHost); });
   }).catch(e => {
     setTimeout(function(){ throw e; }, 0);
   });
