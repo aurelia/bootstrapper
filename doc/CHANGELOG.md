@@ -1,3 +1,11 @@
+### 0.6.1 (2015-01-06)
+
+
+#### Bug Fixes
+
+* **package:** update loader-systemjs to latest version ([09131833](http://github.com/aurelia/bootstrapper/commit/09131833c0fde8689f0261e57df31e736a481253))
+
+
 ## 0.6.0 (2015-01-06)
 
 
