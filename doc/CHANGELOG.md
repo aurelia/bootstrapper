@@ -8,8 +8,8 @@
 
 #### Features
 
-* **bootstrapped:** switch router and resources over to plugin model ([aa93bce4](http://github.com/aurelia/bootstrapper/commit/aa93bce4e8ebf20e01128d2ce2a63201d6947c73))
 * **bootstrapper:**
+  * switch router and resources over to plugin model ([aa93bce4](http://github.com/aurelia/bootstrapper/commit/aa93bce4e8ebf20e01128d2ce2a63201d6947c73))
   * switch to core-js ([166c13d6](http://github.com/aurelia/bootstrapper/commit/166c13d6d8bbf86a7206be00566ded34ef9ab17d))
   * add plugin helper for event aggregator ([6df89100](http://github.com/aurelia/bootstrapper/commit/6df8910076c8c164cceffd4a402ec7439e892edf))
   * add plugin helper for binding language ([82a86ffc](http://github.com/aurelia/bootstrapper/commit/82a86ffcca2b3c0a3a23305e51d327244c0c5e19))
