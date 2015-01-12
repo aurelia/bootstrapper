@@ -1,3 +1,11 @@
+## 0.8.0 (2015-01-12)
+
+
+#### Bug Fixes
+
+* **package:** update Aurelia dependencies ([37aeca13](http://github.com/aurelia/bootstrapper/commit/37aeca13b7b14800c6f15f9103ba20c0c0a28ac3))
+
+
 ## 0.7.0 (2015-01-07)
 
 

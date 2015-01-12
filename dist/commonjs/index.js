@@ -111,7 +111,8 @@ function configureAurelia(aurelia) {
 }
 
 function handleMain(mainHost) {
-  var mainModuleId = mainHost.getAttribute("aurelia-main") || "main", loader = new SystemJSLoader();
+  var mainModuleId = mainHost.getAttribute("aurelia-main") || "main",
+      loader = new SystemJSLoader();
 
   return loader.loadModule(mainModuleId).then(function (m) {
     var aurelia = new Aurelia(loader);
@@ -126,7 +127,8 @@ function handleMain(mainHost) {
 }
 
 function handleApp(appHost) {
-  var appModuleId = appHost.getAttribute("aurelia-app") || "app", aurelia = new Aurelia();
+  var appModuleId = appHost.getAttribute("aurelia-app") || "app",
+      aurelia = new Aurelia();
 
   return configureAurelia(aurelia).then(function () {
     aurelia.plugins.installBindingLanguage().installResources().installRouter().installEventAggregator();
