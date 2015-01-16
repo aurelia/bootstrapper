@@ -29,10 +29,12 @@ function loadPolyfills(){
       return System.normalize('aurelia-loader', frameworkName).then(function(loaderName){
         var toLoad = [];
 
-        logger.debug('loading core-js');
-        toLoad.push(System.normalize('core-js', loaderName).then(function(name){
-          return System.import(name);
-        }));
+        if(!System.polyfilled){
+          logger.debug('loading core-js');
+          toLoad.push(System.normalize('core-js', loaderName).then(function(name){
+            return System.import(name);
+          }));
+        }
 
         toLoad.push(System.normalize('aurelia-depedency-injection', frameworkName).then(function(name){
           System.map['aurelia-depedency-injection'] = name;
