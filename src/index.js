@@ -73,33 +73,33 @@ function configureAurelia(aurelia){
     var toLoad = [];
 
     toLoad.push(System.normalize('aurelia-templating-binding', bName).then(templatingBinding => {
-      aurelia.plugins.installBindingLanguage = function(){
-        aurelia.plugins.install(templatingBinding);
+      aurelia.use.defaultBindingLanguage = function(){
+        aurelia.use.plugin(templatingBinding);
         return this;
       };
     }));
 
     toLoad.push(System.normalize('aurelia-history-browser', bName).then(historyBrowser => {
       return System.normalize('aurelia-templating-router', bName).then(templatingRouter => {
-        aurelia.plugins.installRouter = function(){
-          aurelia.plugins.install(historyBrowser);
-          aurelia.plugins.install(templatingRouter);
+        aurelia.use.router = function(){
+          aurelia.use.plugin(historyBrowser);
+          aurelia.use.plugin(templatingRouter);
           return this;
         };
       });
     }));
 
     toLoad.push(System.normalize('aurelia-templating-resources', bName).then(name => {
-      aurelia.plugins.installResources = function(){
-        aurelia.plugins.install(name);
+      aurelia.use.defaultResources = function(){
+        aurelia.use.plugin(name);
         return this;
       }
     }));
 
     toLoad.push(System.normalize('aurelia-event-aggregator', bName).then(eventAggregator => {
       System.map['aurelia-event-aggregator'] = eventAggregator;
-      aurelia.plugins.installEventAggregator = function(){
-        aurelia.plugins.install(eventAggregator);
+      aurelia.use.eventAggregator = function(){
+        aurelia.use.plugin(eventAggregator);
         return this;
       };
     }));
@@ -126,11 +126,17 @@ function handleApp(appHost){
       aurelia = new Aurelia();
 
   return configureAurelia(aurelia).then(() => {
-    aurelia.plugins
-      .installBindingLanguage()
-      .installResources()
-      .installRouter()
-      .installEventAggregator();
+    aurelia.use
+      .defaultBindingLanguage()
+      .defaultResources()
+      .router()
+      .eventAggregator();
+
+    if(appHost.hasAttribute('es5')){
+      aurelia.use.es5();
+    } else if(appHost.hasAttribute('atscript')){
+      aurelia.use.atscript();
+    }
 
     return aurelia.start().then(a => { return a.setRoot(appModuleId, appHost); });
   }).catch(e => {
