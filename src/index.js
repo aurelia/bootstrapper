@@ -1,4 +1,4 @@
-import {SystemJSLoader} from 'aurelia-loader-systemjs';
+import {DefaultLoader} from 'aurelia-loader-default';
 import {Aurelia, LogManager} from 'aurelia-framework';
 import {ConsoleAppender} from 'aurelia-logging-console';
 
@@ -110,7 +110,7 @@ function configureAurelia(aurelia){
 
 function handleMain(mainHost){
   var mainModuleId = mainHost.getAttribute('aurelia-main') || 'main',
-      loader = new SystemJSLoader();
+      loader = new DefaultLoader();
 
   return loader.loadModule(mainModuleId)
     .then(m => {

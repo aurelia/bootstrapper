@@ -6,7 +6,7 @@ This library is part of the [Aurelia](http://www.aurelia.io/) platform and conta
 
 ## Dependencies
 
-* [aurelia-loader-systemjs](https://github.com/aurelia/loader-systemjs)
+* [aurelia-loader-default](https://github.com/aurelia/loader-default)
 * [aurelia-framework](https://github.com/aurelia/framework)
 * [aurelia-logging-console](https://github.com/aurelia/logging-console)
 * [aurelia-history](https://github.com/aurelia/history)
