@@ -1,7 +1,7 @@
-define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logging-console"], function (exports, _aureliaLoaderSystemjs, _aureliaFramework, _aureliaLoggingConsole) {
+define(["exports", "aurelia-loader-default", "aurelia-framework", "aurelia-logging-console"], function (exports, _aureliaLoaderDefault, _aureliaFramework, _aureliaLoggingConsole) {
   "use strict";
 
-  var SystemJSLoader = _aureliaLoaderSystemjs.SystemJSLoader;
+  var DefaultLoader = _aureliaLoaderDefault.DefaultLoader;
   var Aurelia = _aureliaFramework.Aurelia;
   var LogManager = _aureliaFramework.LogManager;
   var ConsoleAppender = _aureliaLoggingConsole.ConsoleAppender;
@@ -11,17 +11,17 @@ define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logg
 
   function ready(global) {
     return new Promise(function (resolve, reject) {
+      var completed = function () {
+        global.document.removeEventListener("DOMContentLoaded", completed, false);
+        global.removeEventListener("load", completed, false);
+        resolve(global.document);
+      };
+
       if (global.document.readyState === "complete") {
         resolve(global.document);
       } else {
         global.document.addEventListener("DOMContentLoaded", completed, false);
         global.addEventListener("load", completed, false);
-      }
-
-      function completed() {
-        global.document.removeEventListener("DOMContentLoaded", completed, false);
-        global.removeEventListener("load", completed, false);
-        resolve(global.document);
       }
     });
   }
@@ -34,10 +34,12 @@ define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logg
         return System.normalize("aurelia-loader", frameworkName).then(function (loaderName) {
           var toLoad = [];
 
-          logger.debug("loading core-js");
-          toLoad.push(System.normalize("core-js", loaderName).then(function (name) {
-            return System["import"](name);
-          }));
+          if (!System.polyfilled) {
+            logger.debug("loading core-js");
+            toLoad.push(System.normalize("core-js", loaderName).then(function (name) {
+              return System["import"](name);
+            }));
+          }
 
           toLoad.push(System.normalize("aurelia-depedency-injection", frameworkName).then(function (name) {
             System.map["aurelia-depedency-injection"] = name;
@@ -76,33 +78,33 @@ define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logg
       var toLoad = [];
 
       toLoad.push(System.normalize("aurelia-templating-binding", bName).then(function (templatingBinding) {
-        aurelia.plugins.installBindingLanguage = function () {
-          aurelia.plugins.install(templatingBinding);
+        aurelia.use.defaultBindingLanguage = function () {
+          aurelia.use.plugin(templatingBinding);
           return this;
         };
       }));
 
       toLoad.push(System.normalize("aurelia-history-browser", bName).then(function (historyBrowser) {
         return System.normalize("aurelia-templating-router", bName).then(function (templatingRouter) {
-          aurelia.plugins.installRouter = function () {
-            aurelia.plugins.install(historyBrowser);
-            aurelia.plugins.install(templatingRouter);
+          aurelia.use.router = function () {
+            aurelia.use.plugin(historyBrowser);
+            aurelia.use.plugin(templatingRouter);
             return this;
           };
         });
       }));
 
       toLoad.push(System.normalize("aurelia-templating-resources", bName).then(function (name) {
-        aurelia.plugins.installResources = function () {
-          aurelia.plugins.install(name);
+        aurelia.use.defaultResources = function () {
+          aurelia.use.plugin(name);
           return this;
         };
       }));
 
       toLoad.push(System.normalize("aurelia-event-aggregator", bName).then(function (eventAggregator) {
         System.map["aurelia-event-aggregator"] = eventAggregator;
-        aurelia.plugins.installEventAggregator = function () {
-          aurelia.plugins.install(eventAggregator);
+        aurelia.use.eventAggregator = function () {
+          aurelia.use.plugin(eventAggregator);
           return this;
         };
       }));
@@ -113,7 +115,7 @@ define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logg
 
   function handleMain(mainHost) {
     var mainModuleId = mainHost.getAttribute("aurelia-main") || "main",
-        loader = new SystemJSLoader();
+        loader = new DefaultLoader();
 
     return loader.loadModule(mainModuleId).then(function (m) {
       var aurelia = new Aurelia(loader);
@@ -132,7 +134,13 @@ define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logg
         aurelia = new Aurelia();
 
     return configureAurelia(aurelia).then(function () {
-      aurelia.plugins.installBindingLanguage().installResources().installRouter().installEventAggregator();
+      aurelia.use.defaultBindingLanguage().defaultResources().router().eventAggregator();
+
+      if (appHost.hasAttribute("es5")) {
+        aurelia.use.es5();
+      } else if (appHost.hasAttribute("atscript")) {
+        aurelia.use.atscript();
+      }
 
       return aurelia.start().then(function (a) {
         return a.setRoot(appModuleId, appHost);
@@ -150,7 +158,10 @@ define(["exports", "aurelia-loader-systemjs", "aurelia-framework", "aurelia-logg
 
   function run() {
     return ready(window).then(function (doc) {
-      var mainHost = doc.querySelectorAll("[aurelia-main]"), appHost = doc.querySelectorAll("[aurelia-app]"), i, ii;
+      var mainHost = doc.querySelectorAll("[aurelia-main]"),
+          appHost = doc.querySelectorAll("[aurelia-app]"),
+          i,
+          ii;
 
       if (appHost.length && !mainHost.length && runningLocally()) {
         LogManager.addAppender(new ConsoleAppender());

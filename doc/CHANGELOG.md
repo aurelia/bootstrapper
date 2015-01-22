@@ -1,3 +1,18 @@
+## 0.9.0 (2015-01-22)
+
+
+#### Bug Fixes
+
+* **all:** use default loader ([8acf5996](http://github.com/aurelia/bootstrapper/commit/8acf599669c59fb9b5625a98dcbc3f7acd5ce45f))
+* **package:** update dependencies ([a8811da7](http://github.com/aurelia/bootstrapper/commit/a8811da77ecb80ca11b0e7adaec8a76e841517cc))
+
+
+#### Features
+
+* **all:** update to new plugin api ([50fc5ce6](http://github.com/aurelia/bootstrapper/commit/50fc5ce6f56bd24f3dbbc66a7f5aa0b93f7cbfed))
+* **bootstrapper:** identify polyfilled system and skip core-js ([76fab9a1](http://github.com/aurelia/bootstrapper/commit/76fab9a153ac71ff78e6d6e5a544b8df05041a5e))
+
+
 ## 0.8.0 (2015-01-12)
 
 
