@@ -94,6 +94,7 @@ function configureAurelia(aurelia) {
     }));
 
     toLoad.push(System.normalize("aurelia-templating-resources", bName).then(function (name) {
+      System.map["aurelia-templating-resources"] = name;
       aurelia.use.defaultResources = function () {
         aurelia.use.plugin(name);
         return this;

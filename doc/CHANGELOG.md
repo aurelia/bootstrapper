@@ -1,3 +1,11 @@
+### 0.9.2 (2015-01-24)
+
+
+#### Bug Fixes
+
+* **bootstrapped:** ensure that templating resources are in System.map ([fb6ad861](http://github.com/aurelia/bootstrapper/commit/fb6ad8615483c7f9dedb017599c4f04bb6135c61))
+
+
 ### 0.9.1 (2015-01-24)
 
 
