@@ -1,3 +1,11 @@
+### 0.9.1 (2015-01-24)
+
+
+#### Bug Fixes
+
+* **package:** update deps and fix bower semver ranges ([8754ff0e](http://github.com/aurelia/bootstrapper/commit/8754ff0e915780ed14797eadcb43d9dccb60bf11))
+
+
 ## 0.9.0 (2015-01-22)
 
 
