@@ -4,6 +4,34 @@ import {ConsoleAppender} from 'aurelia-logging-console';
 
 var logger = LogManager.getLogger('bootstrapper');
 
+var readyQueue = [];
+var isReady = false;
+
+function onReady(callback) {
+  return new Promise((resolve, reject) => {
+    if (!isReady) {
+      readyQueue.push(() => {
+        try {
+          resolve(callback());
+        } catch(e) {
+          reject(e);
+        }
+      });
+    } else {
+      resolve(callback());
+    }
+  });
+}
+
+export function bootstrap(configure) {
+  return onReady(() => {
+    var loader = new DefaultLoader(),
+        aurelia = new Aurelia(loader);
+        
+    return configureAurelia(aurelia).then(() => { return configure(aurelia); });
+  });
+}
+
 function ready(global) {
   return new Promise((resolve, reject) =>{
     if (global.document.readyState === "complete" ) {
@@ -169,6 +197,12 @@ function run() {
       for (i = 0, ii = appHost.length; i < ii; ++i) {
         handleApp(appHost[i]);
       }
+      
+      isReady = true;
+      for (i = 0, ii = readyQueue.length; i < ii; ++i) {
+        readyQueue[i]();
+      }
+      readyQueue = [];
     });
   });
 }
