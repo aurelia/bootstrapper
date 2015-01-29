@@ -1,3 +1,10 @@
+### 0.9.3 (2015-01-29)
+
+#### Features
+
+* **bootstrapper:** allow for bootstrapping from the main module
+
+
 ### 0.9.2 (2015-01-24)
 
 

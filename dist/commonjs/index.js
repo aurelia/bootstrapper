@@ -1,5 +1,6 @@
 "use strict";
 
+exports.bootstrap = bootstrap;
 var DefaultLoader = require("aurelia-loader-default").DefaultLoader;
 var Aurelia = require("aurelia-framework").Aurelia;
 var LogManager = require("aurelia-framework").LogManager;
@@ -7,6 +8,36 @@ var ConsoleAppender = require("aurelia-logging-console").ConsoleAppender;
 
 
 var logger = LogManager.getLogger("bootstrapper");
+
+var readyQueue = [];
+var isReady = false;
+
+function onReady(callback) {
+  return new Promise(function (resolve, reject) {
+    if (!isReady) {
+      readyQueue.push(function () {
+        try {
+          resolve(callback());
+        } catch (e) {
+          reject(e);
+        }
+      });
+    } else {
+      resolve(callback());
+    }
+  });
+}
+
+function bootstrap(configure) {
+  return onReady(function () {
+    var loader = new DefaultLoader(),
+        aurelia = new Aurelia(loader);
+
+    return configureAurelia(aurelia).then(function () {
+      return configure(aurelia);
+    });
+  });
+}
 
 function ready(global) {
   return new Promise(function (resolve, reject) {
@@ -176,6 +207,12 @@ function run() {
       for (i = 0, ii = appHost.length; i < ii; ++i) {
         handleApp(appHost[i]);
       }
+
+      isReady = true;
+      for (i = 0, ii = readyQueue.length; i < ii; ++i) {
+        readyQueue[i]();
+      }
+      readyQueue = [];
     });
   });
 }

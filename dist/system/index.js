@@ -1,8 +1,35 @@
 System.register(["aurelia-loader-default", "aurelia-framework", "aurelia-logging-console"], function (_export) {
   "use strict";
 
-  var DefaultLoader, Aurelia, LogManager, ConsoleAppender, logger;
+  var DefaultLoader, Aurelia, LogManager, ConsoleAppender, logger, readyQueue, isReady;
+  _export("bootstrap", bootstrap);
 
+  function onReady(callback) {
+    return new Promise(function (resolve, reject) {
+      if (!isReady) {
+        readyQueue.push(function () {
+          try {
+            resolve(callback());
+          } catch (e) {
+            reject(e);
+          }
+        });
+      } else {
+        resolve(callback());
+      }
+    });
+  }
+
+  function bootstrap(configure) {
+    return onReady(function () {
+      var loader = new DefaultLoader(),
+          aurelia = new Aurelia(loader);
+
+      return configureAurelia(aurelia).then(function () {
+        return configure(aurelia);
+      });
+    });
+  }
 
   function ready(global) {
     return new Promise(function (resolve, reject) {
@@ -172,6 +199,12 @@ System.register(["aurelia-loader-default", "aurelia-framework", "aurelia-logging
         for (i = 0, ii = appHost.length; i < ii; ++i) {
           handleApp(appHost[i]);
         }
+
+        isReady = true;
+        for (i = 0, ii = readyQueue.length; i < ii; ++i) {
+          readyQueue[i]();
+        }
+        readyQueue = [];
       });
     });
   }
@@ -187,6 +220,8 @@ System.register(["aurelia-loader-default", "aurelia-framework", "aurelia-logging
     }],
     execute: function () {
       logger = LogManager.getLogger("bootstrapper");
+      readyQueue = [];
+      isReady = false;
       run();
     }
   };
