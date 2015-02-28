@@ -7,7 +7,6 @@ define(["exports", "aurelia-loader-default", "aurelia-framework", "aurelia-loggi
   var LogManager = _aureliaFramework.LogManager;
   var ConsoleAppender = _aureliaLoggingConsole.ConsoleAppender;
 
-
   var logger = LogManager.getLogger("bootstrapper");
 
   var readyQueue = [];
@@ -42,17 +41,17 @@ define(["exports", "aurelia-loader-default", "aurelia-framework", "aurelia-loggi
 
   function ready(global) {
     return new Promise(function (resolve, reject) {
-      var completed = function () {
-        global.document.removeEventListener("DOMContentLoaded", completed, false);
-        global.removeEventListener("load", completed, false);
-        resolve(global.document);
-      };
-
       if (global.document.readyState === "complete") {
         resolve(global.document);
       } else {
         global.document.addEventListener("DOMContentLoaded", completed, false);
         global.addEventListener("load", completed, false);
+      }
+
+      function completed() {
+        global.document.removeEventListener("DOMContentLoaded", completed, false);
+        global.removeEventListener("load", completed, false);
+        resolve(global.document);
       }
     });
   }
@@ -219,4 +218,7 @@ define(["exports", "aurelia-loader-default", "aurelia-framework", "aurelia-loggi
   }
 
   run();
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 });

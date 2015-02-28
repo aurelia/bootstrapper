@@ -1,11 +1,15 @@
 "use strict";
 
 exports.bootstrap = bootstrap;
-var DefaultLoader = require("aurelia-loader-default").DefaultLoader;
-var Aurelia = require("aurelia-framework").Aurelia;
-var LogManager = require("aurelia-framework").LogManager;
-var ConsoleAppender = require("aurelia-logging-console").ConsoleAppender;
 
+var DefaultLoader = require("aurelia-loader-default").DefaultLoader;
+
+var _aureliaFramework = require("aurelia-framework");
+
+var Aurelia = _aureliaFramework.Aurelia;
+var LogManager = _aureliaFramework.LogManager;
+
+var ConsoleAppender = require("aurelia-logging-console").ConsoleAppender;
 
 var logger = LogManager.getLogger("bootstrapper");
 
@@ -41,17 +45,17 @@ function bootstrap(configure) {
 
 function ready(global) {
   return new Promise(function (resolve, reject) {
-    var completed = function () {
-      global.document.removeEventListener("DOMContentLoaded", completed, false);
-      global.removeEventListener("load", completed, false);
-      resolve(global.document);
-    };
-
     if (global.document.readyState === "complete") {
       resolve(global.document);
     } else {
       global.document.addEventListener("DOMContentLoaded", completed, false);
       global.addEventListener("load", completed, false);
+    }
+
+    function completed() {
+      global.document.removeEventListener("DOMContentLoaded", completed, false);
+      global.removeEventListener("load", completed, false);
+      resolve(global.document);
     }
   });
 }
@@ -218,3 +222,6 @@ function run() {
 }
 
 run();
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});

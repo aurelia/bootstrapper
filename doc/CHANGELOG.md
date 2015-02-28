@@ -1,3 +1,12 @@
+### 0.9.4 (2015-02-28)
+
+
+#### Bug Fixes
+
+* **build:** add missing bower bump ([e72cf895](http://github.com/aurelia/bootstrapper/commit/e72cf8957e5ca912dbd9a3c2bc2287050450d258))
+* **package:** update dependencies ([f3435bf8](http://github.com/aurelia/bootstrapper/commit/f3435bf8ecf8beff79494e1d68538fa5688379fd))
+
+
 ### 0.9.3 (2015-01-29)
 
 #### Features

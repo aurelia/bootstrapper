@@ -1,7 +1,6 @@
 System.register(["aurelia-loader-default", "aurelia-framework", "aurelia-logging-console"], function (_export) {
-  "use strict";
-
   var DefaultLoader, Aurelia, LogManager, ConsoleAppender, logger, readyQueue, isReady;
+
   _export("bootstrap", bootstrap);
 
   function onReady(callback) {
@@ -33,17 +32,17 @@ System.register(["aurelia-loader-default", "aurelia-framework", "aurelia-logging
 
   function ready(global) {
     return new Promise(function (resolve, reject) {
-      var completed = function () {
-        global.document.removeEventListener("DOMContentLoaded", completed, false);
-        global.removeEventListener("load", completed, false);
-        resolve(global.document);
-      };
-
       if (global.document.readyState === "complete") {
         resolve(global.document);
       } else {
         global.document.addEventListener("DOMContentLoaded", completed, false);
         global.addEventListener("load", completed, false);
+      }
+
+      function completed() {
+        global.document.removeEventListener("DOMContentLoaded", completed, false);
+        global.removeEventListener("load", completed, false);
+        resolve(global.document);
       }
     });
   }
@@ -219,6 +218,8 @@ System.register(["aurelia-loader-default", "aurelia-framework", "aurelia-logging
       ConsoleAppender = _aureliaLoggingConsole.ConsoleAppender;
     }],
     execute: function () {
+      "use strict";
+
       logger = LogManager.getLogger("bootstrapper");
       readyQueue = [];
       isReady = false;
