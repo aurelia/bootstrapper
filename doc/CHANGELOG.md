@@ -1,3 +1,11 @@
+### 0.9.5 (2015-02-28)
+
+
+#### Bug Fixes
+
+* **package:** change jspm directories ([f82ca368](http://github.com/aurelia/bootstrapper/commit/f82ca3689a8b5aa197b22bd804dae0cbfd0cab7a))
+
+
 ### 0.9.4 (2015-02-28)
 
 
