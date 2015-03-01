@@ -19,23 +19,23 @@
     "url": "http://github.com/aurelia/bootstrapper"
   },
   "jspm": {
-    "main": "system/index",
+    "main": "index",
     "format": "register",
     "directories": {
-      "lib": "dist"
+      "lib": "dist/system"
     },
     "dependencies": {
-      "aurelia-event-aggregator": "github:aurelia/event-aggregator@^0.2.3",
-      "aurelia-framework": "github:aurelia/framework@^0.8.7",
-      "aurelia-history": "github:aurelia/history@^0.2.3",
-      "aurelia-history-browser": "github:aurelia/history-browser@^0.2.4",
-      "aurelia-loader-default": "github:aurelia/loader-default@^0.4.2",
-      "aurelia-logging-console": "github:aurelia/logging-console@^0.2.3",
-      "aurelia-router": "github:aurelia/router@^0.5.7",
-      "aurelia-templating": "github:aurelia/templating@^0.8.13",
-      "aurelia-templating-binding": "github:aurelia/templating-binding@^0.8.6",
-      "aurelia-templating-resources": "github:aurelia/templating-resources@^0.8.9",
-      "aurelia-templating-router": "github:aurelia/templating-router@^0.9.3"
+      "aurelia-event-aggregator": "github:aurelia/event-aggregator@^0.2.4",
+      "aurelia-framework": "github:aurelia/framework@^0.8.8",
+      "aurelia-history": "github:aurelia/history@^0.2.4",
+      "aurelia-history-browser": "github:aurelia/history-browser@^0.2.5",
+      "aurelia-loader-default": "github:aurelia/loader-default@^0.4.3",
+      "aurelia-logging-console": "github:aurelia/logging-console@^0.2.4",
+      "aurelia-router": "github:aurelia/router@^0.5.8",
+      "aurelia-templating": "github:aurelia/templating@^0.8.14",
+      "aurelia-templating-binding": "github:aurelia/templating-binding@^0.8.7",
+      "aurelia-templating-resources": "github:aurelia/templating-resources@^0.8.10",
+      "aurelia-templating-router": "github:aurelia/templating-router@^0.9.4"
     }
   },
   "devDependencies": {
