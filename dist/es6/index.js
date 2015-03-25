@@ -1,4 +1,3 @@
-import {DefaultLoader} from 'aurelia-loader-default';
 import {Aurelia, LogManager} from 'aurelia-framework';
 import {ConsoleAppender} from 'aurelia-logging-console';
 
@@ -25,9 +24,9 @@ function onReady(callback) {
 
 export function bootstrap(configure) {
   return onReady(() => {
-    var loader = new DefaultLoader(),
+    var loader = new window.AureliaLoader(),
         aurelia = new Aurelia(loader);
-        
+
     return configureAurelia(aurelia).then(() => { return configure(aurelia); });
   });
 }
@@ -49,7 +48,19 @@ function ready(global) {
   });
 }
 
-function loadPolyfills(){
+function ensureLoader(){
+  if(!window.AureliaLoader){
+    return System.normalize('aurelia-bootstrapper').then(function(bootstrapperName){
+      return System.normalize('aurelia-loader-default', bootstrapperName).then(function(loaderName){
+        return System.import(loaderName);
+      })
+    });
+  }
+
+  return Promise.resolve();
+}
+
+function preparePlatform(){
   return System.normalize('aurelia-bootstrapper').then(function(bootstrapperName){
     return System.normalize('aurelia-framework', bootstrapperName).then(function(frameworkName){
       System.map['aurelia-framework'] = frameworkName;
@@ -96,6 +107,8 @@ function loadPolyfills(){
   });
 }
 
+var installedDevelopmentLogging = false;
+
 function configureAurelia(aurelia){
   return System.normalize('aurelia-bootstrapper').then(function(bName){
     var toLoad = [];
@@ -133,76 +146,87 @@ function configureAurelia(aurelia){
       };
     }));
 
+    aurelia.use.standardConfiguration = function(){
+      aurelia.use
+        .defaultBindingLanguage()
+        .defaultResources()
+        .router()
+        .eventAggregator();
+      return this;
+    };
+
+    aurelia.use.developmentLogging = function(){
+      if(!installedDevelopmentLogging){
+        installedDevelopmentLogging = true;
+        LogManager.addAppender(new ConsoleAppender());
+        LogManager.setLevel(LogManager.levels.debug);
+      }
+      return this;
+    }
+
     return Promise.all(toLoad);
   });
 }
 
-function handleMain(mainHost){
-  var mainModuleId = mainHost.getAttribute('aurelia-main') || 'main',
-      loader = new DefaultLoader();
-
-  return loader.loadModule(mainModuleId)
-    .then(m => {
-      var aurelia = new Aurelia(loader);
-      return configureAurelia(aurelia).then(() => { return m.configure(aurelia); });
-    }).catch(e => {
-      setTimeout(function(){ throw e; }, 0);
-    });
+function runningLocally(){
+  return window.location.protocol !== 'http' && window.location.protocol !== 'https';
 }
 
 function handleApp(appHost){
-  var appModuleId = appHost.getAttribute('aurelia-app') || 'app',
-      aurelia = new Aurelia();
+  var configModuleId = appHost.getAttribute('aurelia-app'),
+      aurelia, loader;
 
-  return configureAurelia(aurelia).then(() => {
-    aurelia.use
-      .defaultBindingLanguage()
-      .defaultResources()
-      .router()
-      .eventAggregator();
+  if(configModuleId){
+    loader = new window.AureliaLoader();
 
-    if(appHost.hasAttribute('es5')){
-      aurelia.use.es5();
-    } else if(appHost.hasAttribute('atscript')){
-      aurelia.use.atscript();
-    }
+    return loader.loadModule(configModuleId)
+      .then(m => {
+        aurelia = new Aurelia(loader);
+        return configureAurelia(aurelia).then(() => { return m.configure(aurelia); });
+      }).catch(e => {
+        setTimeout(function(){ throw e; }, 0);
+      });
+  }else{
+    aurelia = new Aurelia();
 
-    return aurelia.start().then(a => { return a.setRoot(appModuleId, appHost); });
-  }).catch(e => {
-    setTimeout(function(){ throw e; }, 0);
-  });
-}
+    return configureAurelia(aurelia).then(() => {
+      if(runningLocally()){
+        aurelia.use.developmentLogging();
+      }
 
-function runningLocally(){
-  return window.location.protocol !== 'http' &&
-    window.location.protocol !== 'https';
+      aurelia.use.standardConfiguration();
+
+      if(appHost.hasAttribute('es5')){
+        aurelia.use.es5();
+      } else if(appHost.hasAttribute('atscript')){
+        aurelia.use.atscript();
+      }
+
+      return aurelia.start().then(a => { return a.setRoot(undefined, appHost); });
+    }).catch(e => {
+      setTimeout(function(){ throw e; }, 0);
+    });
+  }
 }
 
 function run() {
-  return ready(window).then(function (doc) {
-    var mainHost = doc.querySelectorAll("[aurelia-main]"), 
-        appHost = doc.querySelectorAll("[aurelia-app]"), 
-        i, ii;
-    
-    if (appHost.length && !mainHost.length && runningLocally()) {
-      LogManager.addAppender(new ConsoleAppender());
-      LogManager.setLevel(LogManager.levels.debug);
-    }
+  return ready(window).then(doc => {
+    var appHost = doc.querySelectorAll("[aurelia-app]");
 
-    return loadPolyfills().then(function(){
-      for (i = 0, ii = mainHost.length; i < ii; ++i) {
-        handleMain(mainHost[i]);
-      }
+    return ensureLoader().then(() => {
+      return preparePlatform().then(function(){
+        var i, ii;
 
-      for (i = 0, ii = appHost.length; i < ii; ++i) {
-        handleApp(appHost[i]);
-      }
-      
-      isReady = true;
-      for (i = 0, ii = readyQueue.length; i < ii; ++i) {
-        readyQueue[i]();
-      }
-      readyQueue = [];
+        for (i = 0, ii = appHost.length; i < ii; ++i) {
+          handleApp(appHost[i]);
+        }
+
+        isReady = true;
+        for (i = 0, ii = readyQueue.length; i < ii; ++i) {
+          readyQueue[i]();
+        }
+        readyQueue = [];
+      });
     });
   });
 }

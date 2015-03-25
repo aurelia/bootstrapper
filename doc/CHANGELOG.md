@@ -1,3 +1,16 @@
+## 0.10.0 (2015-03-25)
+
+
+#### Bug Fixes
+
+* **bootstrapper:** change how default loader is discovered ([13b04160](http://github.com/aurelia/bootstrapper/commit/13b0416081d1cea542e7b54edb086e6ade977692))
+
+
+#### Features
+
+* **bootstrapper:** new startup logic ([373bf740](http://github.com/aurelia/bootstrapper/commit/373bf740da2cffbeb33a652dd538ec1f1ce2f4c7))
+
+
 ### 0.9.5 (2015-02-28)
 
 
