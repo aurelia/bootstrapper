@@ -20,6 +20,7 @@ System.config({
     "aurelia-templating-binding": "github:aurelia/templating-binding@0.9.0",
     "aurelia-templating-resources": "github:aurelia/templating-resources@0.9.1",
     "aurelia-templating-router": "github:aurelia/templating-router@0.10.0",
+    "core-js": "github:zloirock/core-js@0.8.1",
     "github:aurelia/binding@0.3.7": {
       "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.4.5",
       "aurelia-metadata": "github:aurelia/metadata@0.3.4",
