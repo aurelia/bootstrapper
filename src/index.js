@@ -199,8 +199,6 @@ function handleApp(appHost){
 
       if(appHost.hasAttribute('es5')){
         aurelia.use.es5();
-      } else if(appHost.hasAttribute('atscript')){
-        aurelia.use.atscript();
       }
 
       return aurelia.start().then(a => { return a.setRoot(undefined, appHost); });
