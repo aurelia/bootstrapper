@@ -1,3 +1,13 @@
+## 0.11.0 (2015-04-09)
+
+
+#### Features
+
+* **all:**
+  * remove AtScript support ([65134367](http://github.com/aurelia/bootstrapper/commit/651343677e3d4d8825f065a7bad8d72708ac83b0))
+  * update compiler and core-is integration ([52d84e7a](http://github.com/aurelia/bootstrapper/commit/52d84e7a6594304f418da63d47cd734c99bf0afc))
+
+
 ## 0.10.0 (2015-03-25)
 
 

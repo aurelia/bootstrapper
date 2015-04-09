@@ -1,3 +1,4 @@
+import core from 'core-js';
 import {Aurelia, LogManager} from 'aurelia-framework';
 import {ConsoleAppender} from 'aurelia-logging-console';
 
@@ -198,8 +199,6 @@ function handleApp(appHost){
 
       if(appHost.hasAttribute('es5')){
         aurelia.use.es5();
-      } else if(appHost.hasAttribute('atscript')){
-        aurelia.use.atscript();
       }
 
       return aurelia.start().then(a => { return a.setRoot(undefined, appHost); });
