@@ -197,10 +197,6 @@ function handleApp(appHost){
 
       aurelia.use.standardConfiguration();
 
-      if(appHost.hasAttribute('es5')){
-        aurelia.use.es5();
-      }
-
       return aurelia.start().then(a => { return a.setRoot(undefined, appHost); });
     }).catch(e => {
       setTimeout(function(){ throw e; }, 0);
