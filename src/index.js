@@ -183,12 +183,14 @@ function handleApp(appHost){
     return loader.loadModule(configModuleId)
       .then(m => {
         aurelia = new Aurelia(loader);
+        aurelia.host = appHost;
         return configureAurelia(aurelia).then(() => { return m.configure(aurelia); });
       }).catch(e => {
         setTimeout(function(){ throw e; }, 0);
       });
   }else{
     aurelia = new Aurelia();
+    aurelia.host = appHost;
 
     return configureAurelia(aurelia).then(() => {
       if(runningLocally()){
@@ -197,7 +199,7 @@ function handleApp(appHost){
 
       aurelia.use.standardConfiguration();
 
-      return aurelia.start().then(a => { return a.setRoot(undefined, appHost); });
+      return aurelia.start().then(a => a.setRoot());
     }).catch(e => {
       setTimeout(function(){ throw e; }, 0);
     });
