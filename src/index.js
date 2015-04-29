@@ -160,7 +160,7 @@ function configureAurelia(aurelia){
       if(!installedDevelopmentLogging){
         installedDevelopmentLogging = true;
         LogManager.addAppender(new ConsoleAppender());
-        LogManager.setLevel(LogManager.levels.debug);
+        LogManager.setLevel(LogManager.logLevel.debug);
       }
       return this;
     }
