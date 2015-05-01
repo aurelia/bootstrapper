@@ -1,3 +1,15 @@
+## 0.12.0 (2015-05-01)
+
+
+#### Bug Fixes
+
+* **all:**
+  * root should default to aurelia-app host when not specified ([ed3b7124](http://github.com/aurelia/bootstrapper/commit/ed3b712483696c73b8202ef51cc191b3c4493f35), closes [#5](http://github.com/aurelia/bootstrapper/issues/5))
+  * update to logLevel enum name api change ([64d8edf3](http://github.com/aurelia/bootstrapper/commit/64d8edf355c4caf13fbd02e888a3eaa038ffadf4))
+* **bootstrapper:** removees5-specific helper detection ([d55802b2](http://github.com/aurelia/bootstrapper/commit/d55802b26f44ff7d837bc8fe1a4b05795f58a57d))
+* **preparePlatform:** correct spelling ([010f0a9a](http://github.com/aurelia/bootstrapper/commit/010f0a9a25fe9ccd6536fbb1cfd10b9648aa4abc))
+
+
 ## 0.11.0 (2015-04-09)
 
 

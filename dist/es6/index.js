@@ -76,8 +76,8 @@ function preparePlatform(){
           }));
         }
 
-        toLoad.push(System.normalize('aurelia-depedency-injection', frameworkName).then(function(name){
-          System.map['aurelia-depedency-injection'] = name;
+        toLoad.push(System.normalize('aurelia-dependency-injection', frameworkName).then(function(name){
+          System.map['aurelia-dependency-injection'] = name;
         }));
 
         toLoad.push(System.normalize('aurelia-router', bootstrapperName).then(function(name){
@@ -160,7 +160,7 @@ function configureAurelia(aurelia){
       if(!installedDevelopmentLogging){
         installedDevelopmentLogging = true;
         LogManager.addAppender(new ConsoleAppender());
-        LogManager.setLevel(LogManager.levels.debug);
+        LogManager.setLevel(LogManager.logLevel.debug);
       }
       return this;
     }
@@ -183,12 +183,14 @@ function handleApp(appHost){
     return loader.loadModule(configModuleId)
       .then(m => {
         aurelia = new Aurelia(loader);
+        aurelia.host = appHost;
         return configureAurelia(aurelia).then(() => { return m.configure(aurelia); });
       }).catch(e => {
         setTimeout(function(){ throw e; }, 0);
       });
   }else{
     aurelia = new Aurelia();
+    aurelia.host = appHost;
 
     return configureAurelia(aurelia).then(() => {
       if(runningLocally()){
@@ -197,11 +199,7 @@ function handleApp(appHost){
 
       aurelia.use.standardConfiguration();
 
-      if(appHost.hasAttribute('es5')){
-        aurelia.use.es5();
-      }
-
-      return aurelia.start().then(a => { return a.setRoot(undefined, appHost); });
+      return aurelia.start().then(a => a.setRoot());
     }).catch(e => {
       setTimeout(function(){ throw e; }, 0);
     });

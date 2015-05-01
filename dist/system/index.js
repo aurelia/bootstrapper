@@ -74,8 +74,8 @@ System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], fun
             }));
           }
 
-          toLoad.push(System.normalize('aurelia-depedency-injection', frameworkName).then(function (name) {
-            System.map['aurelia-depedency-injection'] = name;
+          toLoad.push(System.normalize('aurelia-dependency-injection', frameworkName).then(function (name) {
+            System.map['aurelia-dependency-injection'] = name;
           }));
 
           toLoad.push(System.normalize('aurelia-router', bootstrapperName).then(function (name) {
@@ -152,7 +152,7 @@ System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], fun
         if (!installedDevelopmentLogging) {
           installedDevelopmentLogging = true;
           LogManager.addAppender(new ConsoleAppender());
-          LogManager.setLevel(LogManager.levels.debug);
+          LogManager.setLevel(LogManager.logLevel.debug);
         }
         return this;
       };
@@ -175,6 +175,7 @@ System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], fun
 
       return loader.loadModule(configModuleId).then(function (m) {
         aurelia = new Aurelia(loader);
+        aurelia.host = appHost;
         return configureAurelia(aurelia).then(function () {
           return m.configure(aurelia);
         });
@@ -185,6 +186,7 @@ System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], fun
       });
     } else {
       aurelia = new Aurelia();
+      aurelia.host = appHost;
 
       return configureAurelia(aurelia).then(function () {
         if (runningLocally()) {
@@ -193,12 +195,8 @@ System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], fun
 
         aurelia.use.standardConfiguration();
 
-        if (appHost.hasAttribute('es5')) {
-          aurelia.use.es5();
-        }
-
         return aurelia.start().then(function (a) {
-          return a.setRoot(undefined, appHost);
+          return a.setRoot();
         });
       })['catch'](function (e) {
         setTimeout(function () {

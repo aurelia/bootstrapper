@@ -3,9 +3,7 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
 
   var _interopRequire = function (obj) { return obj && obj.__esModule ? obj['default'] : obj; };
 
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
+  exports.__esModule = true;
   exports.bootstrap = bootstrap;
 
   var _core = _interopRequire(_coreJs);
@@ -86,8 +84,8 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
             }));
           }
 
-          toLoad.push(System.normalize('aurelia-depedency-injection', frameworkName).then(function (name) {
-            System.map['aurelia-depedency-injection'] = name;
+          toLoad.push(System.normalize('aurelia-dependency-injection', frameworkName).then(function (name) {
+            System.map['aurelia-dependency-injection'] = name;
           }));
 
           toLoad.push(System.normalize('aurelia-router', bootstrapperName).then(function (name) {
@@ -166,7 +164,7 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
         if (!installedDevelopmentLogging) {
           installedDevelopmentLogging = true;
           _aureliaFramework.LogManager.addAppender(new _aureliaLoggingConsole.ConsoleAppender());
-          _aureliaFramework.LogManager.setLevel(_aureliaFramework.LogManager.levels.debug);
+          _aureliaFramework.LogManager.setLevel(_aureliaFramework.LogManager.logLevel.debug);
         }
         return this;
       };
@@ -189,6 +187,7 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
 
       return loader.loadModule(configModuleId).then(function (m) {
         aurelia = new _aureliaFramework.Aurelia(loader);
+        aurelia.host = appHost;
         return configureAurelia(aurelia).then(function () {
           return m.configure(aurelia);
         });
@@ -199,6 +198,7 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
       });
     } else {
       aurelia = new _aureliaFramework.Aurelia();
+      aurelia.host = appHost;
 
       return configureAurelia(aurelia).then(function () {
         if (runningLocally()) {
@@ -207,12 +207,8 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
 
         aurelia.use.standardConfiguration();
 
-        if (appHost.hasAttribute('es5')) {
-          aurelia.use.es5();
-        }
-
         return aurelia.start().then(function (a) {
-          return a.setRoot(undefined, appHost);
+          return a.setRoot();
         });
       })['catch'](function (e) {
         setTimeout(function () {
