@@ -38,10 +38,11 @@ To build the code, follow these steps.
   ```shell
   npm install
   ```
-3. Ensure that [Gulp](http://gulpjs.com/) is installed. If you need to install it, use the following command:
+3. Ensure that [Gulp](http://gulpjs.com/) is installed. If you need to install it, use the following commands:
 
   ```shell
   npm install -g gulp
+  npm install -g gulp-cli
   ```
 4. To build the code, you can now run:
 
