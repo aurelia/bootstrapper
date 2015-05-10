@@ -190,8 +190,6 @@ function handleApp(appHost){
         aurelia = new Aurelia(loader);
         aurelia.host = appHost;
         return configureAurelia(aurelia).then(() => { return m.configure(aurelia); });
-      }).catch(e => {
-        setTimeout(function(){ throw e; }, 0);
       });
   }else{
     aurelia = new Aurelia();
@@ -205,8 +203,6 @@ function handleApp(appHost){
       aurelia.use.standardConfiguration();
 
       return aurelia.start().then(a => a.setRoot());
-    }).catch(e => {
-      setTimeout(function(){ throw e; }, 0);
     });
   }
 }
