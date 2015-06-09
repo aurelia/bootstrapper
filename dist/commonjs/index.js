@@ -64,11 +64,19 @@ function ready(global) {
 
 function ensureLoader() {
   if (!window.AureliaLoader) {
-    return System.normalize('aurelia-bootstrapper').then(function (bootstrapperName) {
-      return System.normalize('aurelia-loader-default', bootstrapperName).then(function (loaderName) {
-        return System['import'](loaderName);
+    if (window.System) {
+      return System.normalize('aurelia-bootstrapper').then(function (bootstrapperName) {
+        return System.normalize('aurelia-loader-default', bootstrapperName).then(function (loaderName) {
+          return System['import'](loaderName);
+        });
       });
-    });
+    } else if (window.require) {
+      return new Promise(function (resolve, reject) {
+        require(['aurelia-loader-default'], resolve, reject);
+      });
+    } else {
+      throw new Error('No window.AureliaLoader is defined and there is neither a System API (ES6) or a Require API (AMD) available to load your app.');
+    }
   }
 
   return Promise.resolve();

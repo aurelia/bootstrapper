@@ -1,3 +1,11 @@
+### 0.13.1 (2015-06-09)
+
+
+#### Bug Fixes
+
+* **index:** detect System or require api and load appropriately ([2fa4d3e7](http://github.com/aurelia/bootstrapper/commit/2fa4d3e7a6f525912ed1384c6eab33ff34960eb0), closes [#110](http://github.com/aurelia/bootstrapper/issues/110))
+
+
 ## 0.13.0 (2015-06-08)
 
 
