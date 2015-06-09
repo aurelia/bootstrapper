@@ -1,4 +1,6 @@
 System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], function (_export) {
+  'use strict';
+
   var core, Aurelia, LogManager, ConsoleAppender, logger, readyQueue, isReady, installedDevelopmentLogging;
 
   _export('bootstrap', bootstrap);
@@ -117,14 +119,18 @@ System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], fun
         };
       }));
 
+      toLoad.push(System.normalize('aurelia-templating-router', bName).then(function (templatingRouter) {
+        aurelia.use.router = function () {
+          aurelia.use.plugin(templatingRouter);
+          return this;
+        };
+      }));
+
       toLoad.push(System.normalize('aurelia-history-browser', bName).then(function (historyBrowser) {
-        return System.normalize('aurelia-templating-router', bName).then(function (templatingRouter) {
-          aurelia.use.router = function () {
-            aurelia.use.plugin(historyBrowser);
-            aurelia.use.plugin(templatingRouter);
-            return this;
-          };
-        });
+        aurelia.use.history = function () {
+          aurelia.use.plugin(historyBrowser);
+          return this;
+        };
       }));
 
       toLoad.push(System.normalize('aurelia-templating-resources', bName).then(function (name) {
@@ -144,7 +150,7 @@ System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], fun
       }));
 
       aurelia.use.standardConfiguration = function () {
-        aurelia.use.defaultBindingLanguage().defaultResources().router().eventAggregator();
+        aurelia.use.defaultBindingLanguage().defaultResources().history().router().eventAggregator();
         return this;
       };
 
@@ -179,10 +185,6 @@ System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], fun
         return configureAurelia(aurelia).then(function () {
           return m.configure(aurelia);
         });
-      })['catch'](function (e) {
-        setTimeout(function () {
-          throw e;
-        }, 0);
       });
     } else {
       aurelia = new Aurelia();
@@ -198,10 +200,6 @@ System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], fun
         return aurelia.start().then(function (a) {
           return a.setRoot();
         });
-      })['catch'](function (e) {
-        setTimeout(function () {
-          throw e;
-        }, 0);
       });
     }
   }
@@ -238,8 +236,6 @@ System.register(['core-js', 'aurelia-framework', 'aurelia-logging-console'], fun
       ConsoleAppender = _aureliaLoggingConsole.ConsoleAppender;
     }],
     execute: function () {
-      'use strict';
-
       logger = LogManager.getLogger('bootstrapper');
       readyQueue = [];
       isReady = false;

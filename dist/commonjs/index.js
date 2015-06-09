@@ -1,19 +1,19 @@
 'use strict';
 
-var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
 exports.__esModule = true;
 exports.bootstrap = bootstrap;
 
-var _core = require('core-js');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _core2 = _interopRequireDefault(_core);
+var _coreJs = require('core-js');
 
-var _Aurelia$LogManager = require('aurelia-framework');
+var _coreJs2 = _interopRequireDefault(_coreJs);
 
-var _ConsoleAppender = require('aurelia-logging-console');
+var _aureliaFramework = require('aurelia-framework');
 
-var logger = _Aurelia$LogManager.LogManager.getLogger('bootstrapper');
+var _aureliaLoggingConsole = require('aurelia-logging-console');
+
+var logger = _aureliaFramework.LogManager.getLogger('bootstrapper');
 
 var readyQueue = [];
 var isReady = false;
@@ -37,7 +37,7 @@ function onReady(callback) {
 function bootstrap(configure) {
   return onReady(function () {
     var loader = new window.AureliaLoader(),
-        aurelia = new _Aurelia$LogManager.Aurelia(loader);
+        aurelia = new _aureliaFramework.Aurelia(loader);
 
     return configureAurelia(aurelia).then(function () {
       return configure(aurelia);
@@ -134,14 +134,18 @@ function configureAurelia(aurelia) {
       };
     }));
 
+    toLoad.push(System.normalize('aurelia-templating-router', bName).then(function (templatingRouter) {
+      aurelia.use.router = function () {
+        aurelia.use.plugin(templatingRouter);
+        return this;
+      };
+    }));
+
     toLoad.push(System.normalize('aurelia-history-browser', bName).then(function (historyBrowser) {
-      return System.normalize('aurelia-templating-router', bName).then(function (templatingRouter) {
-        aurelia.use.router = function () {
-          aurelia.use.plugin(historyBrowser);
-          aurelia.use.plugin(templatingRouter);
-          return this;
-        };
-      });
+      aurelia.use.history = function () {
+        aurelia.use.plugin(historyBrowser);
+        return this;
+      };
     }));
 
     toLoad.push(System.normalize('aurelia-templating-resources', bName).then(function (name) {
@@ -161,15 +165,15 @@ function configureAurelia(aurelia) {
     }));
 
     aurelia.use.standardConfiguration = function () {
-      aurelia.use.defaultBindingLanguage().defaultResources().router().eventAggregator();
+      aurelia.use.defaultBindingLanguage().defaultResources().history().router().eventAggregator();
       return this;
     };
 
     aurelia.use.developmentLogging = function () {
       if (!installedDevelopmentLogging) {
         installedDevelopmentLogging = true;
-        _Aurelia$LogManager.LogManager.addAppender(new _ConsoleAppender.ConsoleAppender());
-        _Aurelia$LogManager.LogManager.setLevel(_Aurelia$LogManager.LogManager.logLevel.debug);
+        _aureliaFramework.LogManager.addAppender(new _aureliaLoggingConsole.ConsoleAppender());
+        _aureliaFramework.LogManager.setLevel(_aureliaFramework.LogManager.logLevel.debug);
       }
       return this;
     };
@@ -191,18 +195,14 @@ function handleApp(appHost) {
     loader = new window.AureliaLoader();
 
     return loader.loadModule(configModuleId).then(function (m) {
-      aurelia = new _Aurelia$LogManager.Aurelia(loader);
+      aurelia = new _aureliaFramework.Aurelia(loader);
       aurelia.host = appHost;
       return configureAurelia(aurelia).then(function () {
         return m.configure(aurelia);
       });
-    })['catch'](function (e) {
-      setTimeout(function () {
-        throw e;
-      }, 0);
     });
   } else {
-    aurelia = new _Aurelia$LogManager.Aurelia();
+    aurelia = new _aureliaFramework.Aurelia();
     aurelia.host = appHost;
 
     return configureAurelia(aurelia).then(function () {
@@ -215,10 +215,6 @@ function handleApp(appHost) {
       return aurelia.start().then(function (a) {
         return a.setRoot();
       });
-    })['catch'](function (e) {
-      setTimeout(function () {
-        throw e;
-      }, 0);
     });
   }
 }

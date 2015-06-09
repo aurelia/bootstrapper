@@ -1,12 +1,12 @@
 define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], function (exports, _coreJs, _aureliaFramework, _aureliaLoggingConsole) {
   'use strict';
 
-  var _interopRequire = function (obj) { return obj && obj.__esModule ? obj['default'] : obj; };
-
   exports.__esModule = true;
   exports.bootstrap = bootstrap;
 
-  var _core = _interopRequire(_coreJs);
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var _core = _interopRequireDefault(_coreJs);
 
   var logger = _aureliaFramework.LogManager.getLogger('bootstrapper');
 
@@ -129,14 +129,18 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
         };
       }));
 
+      toLoad.push(System.normalize('aurelia-templating-router', bName).then(function (templatingRouter) {
+        aurelia.use.router = function () {
+          aurelia.use.plugin(templatingRouter);
+          return this;
+        };
+      }));
+
       toLoad.push(System.normalize('aurelia-history-browser', bName).then(function (historyBrowser) {
-        return System.normalize('aurelia-templating-router', bName).then(function (templatingRouter) {
-          aurelia.use.router = function () {
-            aurelia.use.plugin(historyBrowser);
-            aurelia.use.plugin(templatingRouter);
-            return this;
-          };
-        });
+        aurelia.use.history = function () {
+          aurelia.use.plugin(historyBrowser);
+          return this;
+        };
       }));
 
       toLoad.push(System.normalize('aurelia-templating-resources', bName).then(function (name) {
@@ -156,7 +160,7 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
       }));
 
       aurelia.use.standardConfiguration = function () {
-        aurelia.use.defaultBindingLanguage().defaultResources().router().eventAggregator();
+        aurelia.use.defaultBindingLanguage().defaultResources().history().router().eventAggregator();
         return this;
       };
 
@@ -191,10 +195,6 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
         return configureAurelia(aurelia).then(function () {
           return m.configure(aurelia);
         });
-      })['catch'](function (e) {
-        setTimeout(function () {
-          throw e;
-        }, 0);
       });
     } else {
       aurelia = new _aureliaFramework.Aurelia();
@@ -210,10 +210,6 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
         return aurelia.start().then(function (a) {
           return a.setRoot();
         });
-      })['catch'](function (e) {
-        setTimeout(function () {
-          throw e;
-        }, 0);
       });
     }
   }

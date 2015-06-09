@@ -1,3 +1,12 @@
+## 0.13.0 (2015-06-08)
+
+
+#### Bug Fixes
+
+* **all:** break out the history from the router plugin config ([864cf2c2](http://github.com/aurelia/bootstrapper/commit/864cf2c2d17bb9dd4d6642b7a7544de25e985926))
+* **bootstrapper:** remove catch handlers that kill stack traces during startup ([e867ca1f](http://github.com/aurelia/bootstrapper/commit/e867ca1f2c9865e65448c3a5f8074d2711cfe991))
+
+
 ## 0.12.0 (2015-05-01)
 
 

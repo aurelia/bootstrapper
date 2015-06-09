@@ -121,14 +121,18 @@ function configureAurelia(aurelia){
       };
     }));
 
+    toLoad.push(System.normalize('aurelia-templating-router', bName).then(templatingRouter => {
+      aurelia.use.router = function(){
+        aurelia.use.plugin(templatingRouter);
+        return this;
+      };
+    }));
+
     toLoad.push(System.normalize('aurelia-history-browser', bName).then(historyBrowser => {
-      return System.normalize('aurelia-templating-router', bName).then(templatingRouter => {
-        aurelia.use.router = function(){
-          aurelia.use.plugin(historyBrowser);
-          aurelia.use.plugin(templatingRouter);
-          return this;
-        };
-      });
+      aurelia.use.history = function(){
+        aurelia.use.plugin(historyBrowser);
+        return this;
+      };
     }));
 
     toLoad.push(System.normalize('aurelia-templating-resources', bName).then(name => {
@@ -151,6 +155,7 @@ function configureAurelia(aurelia){
       aurelia.use
         .defaultBindingLanguage()
         .defaultResources()
+        .history()
         .router()
         .eventAggregator();
       return this;
@@ -185,8 +190,6 @@ function handleApp(appHost){
         aurelia = new Aurelia(loader);
         aurelia.host = appHost;
         return configureAurelia(aurelia).then(() => { return m.configure(aurelia); });
-      }).catch(e => {
-        setTimeout(function(){ throw e; }, 0);
       });
   }else{
     aurelia = new Aurelia();
@@ -200,8 +203,6 @@ function handleApp(appHost){
       aurelia.use.standardConfiguration();
 
       return aurelia.start().then(a => a.setRoot());
-    }).catch(e => {
-      setTimeout(function(){ throw e; }, 0);
     });
   }
 }
