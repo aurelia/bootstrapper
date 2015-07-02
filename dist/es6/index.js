@@ -3,7 +3,6 @@ import {Aurelia, LogManager} from 'aurelia-framework';
 import {ConsoleAppender} from 'aurelia-logging-console';
 
 var logger = LogManager.getLogger('bootstrapper');
-
 var readyQueue = [];
 var isReady = false;
 
@@ -51,7 +50,7 @@ function ready(global) {
 
 function ensureLoader(){
   if(!window.AureliaLoader){
-    if(window.System){
+    if(window.System && !window.System.isFake){
       return System.normalize('aurelia-bootstrapper').then(bootstrapperName => {
         return System.normalize('aurelia-loader-default', bootstrapperName).then(loaderName => {
           return System.import(loaderName);
@@ -76,13 +75,6 @@ function preparePlatform(){
 
       return System.normalize('aurelia-loader', frameworkName).then(function(loaderName){
         var toLoad = [];
-
-        if(!System.polyfilled){
-          logger.debug('loading core-js');
-          toLoad.push(System.normalize('core-js', loaderName).then(function(name){
-            return System.import(name);
-          }));
-        }
 
         toLoad.push(System.normalize('aurelia-dependency-injection', frameworkName).then(function(name){
           System.map['aurelia-dependency-injection'] = name;

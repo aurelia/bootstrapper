@@ -1,3 +1,11 @@
+## 0.14.0 (2015-07-02)
+
+
+#### Bug Fixes
+
+* **all:** detect fake system and remove core-js dup load ([f135ad39](http://github.com/aurelia/bootstrapper/commit/f135ad39eccb9a5a8e439c09a2354787cedd0fbe))
+
+
 ### 0.13.1 (2015-06-09)
 
 
