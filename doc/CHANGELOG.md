@@ -1,3 +1,7 @@
+### 0.14.1 (2015-07-29)
+
+* improve output file name
+
 ## 0.14.0 (2015-07-02)
 
 
@@ -243,4 +247,3 @@
 #### Bug Fixes
 
 * **package:** update dependencies to latest versions ([70c91a0c](http://github.com/aurelia/bootstrapper/commit/70c91a0c8dc514119b3bf7021c1b0d6e7960d054))
-
