@@ -1,3 +1,11 @@
+## 0.15.0 (2015-08-05)
+
+
+#### Features
+
+* **index:** removed some code that was relocated to aurelia itself ([17ca281d](http://github.com/aurelia/bootstrapper/commit/17ca281d823dc4aa3a22af885e179d83ef6361e1))
+
+
 ### 0.14.1 (2015-07-29)
 
 * improve output file name

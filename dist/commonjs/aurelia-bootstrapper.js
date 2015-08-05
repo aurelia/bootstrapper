@@ -38,9 +38,7 @@ function bootstrap(configure) {
     var loader = new window.AureliaLoader(),
         aurelia = new _aureliaFramework.Aurelia(loader);
 
-    return configureAurelia(aurelia).then(function () {
-      return configure(aurelia);
-    });
+    return configure(aurelia);
   });
 }
 
@@ -121,67 +119,6 @@ function preparePlatform() {
   });
 }
 
-var installedDevelopmentLogging = false;
-
-function configureAurelia(aurelia) {
-  return System.normalize('aurelia-bootstrapper').then(function (bName) {
-    var toLoad = [];
-
-    toLoad.push(System.normalize('aurelia-templating-binding', bName).then(function (templatingBinding) {
-      aurelia.use.defaultBindingLanguage = function () {
-        aurelia.use.plugin(templatingBinding);
-        return this;
-      };
-    }));
-
-    toLoad.push(System.normalize('aurelia-templating-router', bName).then(function (templatingRouter) {
-      aurelia.use.router = function () {
-        aurelia.use.plugin(templatingRouter);
-        return this;
-      };
-    }));
-
-    toLoad.push(System.normalize('aurelia-history-browser', bName).then(function (historyBrowser) {
-      aurelia.use.history = function () {
-        aurelia.use.plugin(historyBrowser);
-        return this;
-      };
-    }));
-
-    toLoad.push(System.normalize('aurelia-templating-resources', bName).then(function (name) {
-      System.map['aurelia-templating-resources'] = name;
-      aurelia.use.defaultResources = function () {
-        aurelia.use.plugin(name);
-        return this;
-      };
-    }));
-
-    toLoad.push(System.normalize('aurelia-event-aggregator', bName).then(function (eventAggregator) {
-      System.map['aurelia-event-aggregator'] = eventAggregator;
-      aurelia.use.eventAggregator = function () {
-        aurelia.use.plugin(eventAggregator);
-        return this;
-      };
-    }));
-
-    aurelia.use.standardConfiguration = function () {
-      aurelia.use.defaultBindingLanguage().defaultResources().history().router().eventAggregator();
-      return this;
-    };
-
-    aurelia.use.developmentLogging = function () {
-      if (!installedDevelopmentLogging) {
-        installedDevelopmentLogging = true;
-        _aureliaFramework.LogManager.addAppender(new _aureliaLoggingConsole.ConsoleAppender());
-        _aureliaFramework.LogManager.setLevel(_aureliaFramework.LogManager.logLevel.debug);
-      }
-      return this;
-    };
-
-    return Promise.all(toLoad);
-  });
-}
-
 function runningLocally() {
   return window.location.protocol !== 'http' && window.location.protocol !== 'https';
 }
@@ -197,24 +134,20 @@ function handleApp(appHost) {
     return loader.loadModule(configModuleId).then(function (m) {
       aurelia = new _aureliaFramework.Aurelia(loader);
       aurelia.host = appHost;
-      return configureAurelia(aurelia).then(function () {
-        return m.configure(aurelia);
-      });
+      return m.configure(aurelia);
     });
   } else {
     aurelia = new _aureliaFramework.Aurelia();
     aurelia.host = appHost;
 
-    return configureAurelia(aurelia).then(function () {
-      if (runningLocally()) {
-        aurelia.use.developmentLogging();
-      }
+    if (runningLocally()) {
+      aurelia.use.developmentLogging();
+    }
 
-      aurelia.use.standardConfiguration();
+    aurelia.use.standardConfiguration();
 
-      return aurelia.start().then(function (a) {
-        return a.setRoot();
-      });
+    return aurelia.start().then(function (a) {
+      return a.setRoot();
     });
   }
 }
