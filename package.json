@@ -26,7 +26,7 @@
     },
     "dependencies": {
       "aurelia-event-aggregator": "github:aurelia/event-aggregator@^0.6.2",
-      "aurelia-framework": "github:aurelia/framework@^0.13.4",
+      "aurelia-framework": "github:aurelia/framework@^0.14.0",
       "aurelia-history": "github:aurelia/history@^0.6.1",
       "aurelia-history-browser": "github:aurelia/history-browser@^0.6.2",
       "aurelia-loader-default": "github:aurelia/loader-default@^0.9.1",

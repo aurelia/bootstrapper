@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "aurelia-event-aggregator": "^0.6.2",
-    "aurelia-framework": "^0.13.4",
+    "aurelia-framework": "^0.14.0",
     "aurelia-history": "^0.6.1",
     "aurelia-history-browser": "^0.6.2",
     "aurelia-loader-default": "^0.9.1",
