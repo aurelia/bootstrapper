@@ -22,7 +22,7 @@ function onReady(callback) {
   });
 }
 
-export function bootstrap(configure) {
+export function bootstrap(configure: (aurelia:Aurelia) => void): Promise<void> {
   return onReady(() => {
     var loader = new window.AureliaLoader(),
         aurelia = new Aurelia(loader);

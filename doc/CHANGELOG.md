@@ -1,3 +1,11 @@
+## 0.16.0 (2015-08-14)
+
+
+#### Features
+
+* **all:** add more type info ([d593ee59](http://github.com/aurelia/bootstrapper/commit/d593ee596f6c1607393d73d551532386415d6947))
+
+
 ## 0.15.0 (2015-08-05)
 
 

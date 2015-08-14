@@ -39,16 +39,16 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
 
   function ready(global) {
     return new Promise(function (resolve, reject) {
-      if (global.document.readyState === 'complete') {
+      if (global.document.readyState === "complete") {
         resolve(global.document);
       } else {
-        global.document.addEventListener('DOMContentLoaded', completed, false);
-        global.addEventListener('load', completed, false);
+        global.document.addEventListener("DOMContentLoaded", completed, false);
+        global.addEventListener("load", completed, false);
       }
 
       function completed() {
-        global.document.removeEventListener('DOMContentLoaded', completed, false);
-        global.removeEventListener('load', completed, false);
+        global.document.removeEventListener("DOMContentLoaded", completed, false);
+        global.removeEventListener("load", completed, false);
         resolve(global.document);
       }
     });
@@ -101,7 +101,7 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
             }));
           }
 
-          if (!('content' in document.createElement('template'))) {
+          if (!("content" in document.createElement("template"))) {
             logger.debug('loading the HTMLTemplateElement polyfill');
             toLoad.push(System.normalize('aurelia-html-template-element', loaderName).then(function (name) {
               return System['import'](name);
@@ -149,7 +149,7 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
 
   function run() {
     return ready(window).then(function (doc) {
-      var appHost = doc.querySelectorAll('[aurelia-app]');
+      var appHost = doc.querySelectorAll("[aurelia-app]");
 
       return ensureLoader().then(function () {
         return preparePlatform().then(function () {
