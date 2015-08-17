@@ -112,24 +112,32 @@ function runningLocally(){
   return window.location.protocol !== 'http' && window.location.protocol !== 'https';
 }
 
-function handleApp(appHost){
-  var configModuleId = appHost.getAttribute('aurelia-app'),
-      aurelia, loader;
+/**
+ * @param {DOM element} appHost - Somebody's name.
+ * @param {String} attribName - name of attribute to find
+ */
+function handleApp(appHost, attribName){
+  attribName = attribName || 'aurelia-app';
+  var configModuleId = appHost.getAttribute(attribName),
+  return configModuleId ? aureliaLoader.config(configModuleId) : aureliaLoader.defaultConfig();
+}
 
-  if(configModuleId){
-    loader = new window.AureliaLoader();
+var aureliaLoader = {
+  config: function(configModuleId) {
+    var loader = new window.AureliaLoader();
 
     return loader.loadModule(configModuleId)
       .then(m => {
-        aurelia = new Aurelia(loader);
+        var aurelia = new Aurelia(loader);
         aurelia.host = appHost;
         return m.configure(aurelia);
       });
-  }else{
-    aurelia = new Aurelia();
+  },
+  defaultConfig: function() {
+    var aurelia = new Aurelia();
     aurelia.host = appHost;
 
-    if(runningLocally()){
+    if (runningLocally()) {
       aurelia.use.developmentLogging();
     }
 
