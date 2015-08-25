@@ -88,13 +88,6 @@ function preparePlatform(){
           System.map['aurelia-logging-console'] = name;
         }));
 
-        if(!('import' in document.createElement('link'))){
-          logger.debug('loading the HTMLImports polyfill');
-          toLoad.push(System.normalize('webcomponentsjs/HTMLImports.min', loaderName).then(function(name){
-            return System.import(name);
-          }));
-        }
-
         if(!("content" in document.createElement("template"))){
           logger.debug('loading the HTMLTemplateElement polyfill');
           toLoad.push(System.normalize('aurelia-html-template-element', loaderName).then(function(name){
