@@ -2,9 +2,9 @@ import core from 'core-js';
 import {Aurelia, LogManager} from 'aurelia-framework';
 import {ConsoleAppender} from 'aurelia-logging-console';
 
-var logger = LogManager.getLogger('bootstrapper');
-var readyQueue = [];
-var isReady = false;
+let logger = LogManager.getLogger('bootstrapper');
+let readyQueue = [];
+let isReady = false;
 
 function onReady(callback) {
   return new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ function onReady(callback) {
 
 export function bootstrap(configure: (aurelia:Aurelia) => void): Promise<void> {
   return onReady(() => {
-    var loader = new window.AureliaLoader(),
+    let loader = new window.AureliaLoader(),
         aurelia = new Aurelia(loader);
 
     return configure(aurelia);
@@ -74,7 +74,7 @@ function preparePlatform(){
       System.map['aurelia-framework'] = frameworkName;
 
       return System.normalize('aurelia-loader', frameworkName).then(function(loaderName){
-        var toLoad = [];
+        let toLoad = [];
 
         toLoad.push(System.normalize('aurelia-dependency-injection', frameworkName).then(function(name){
           System.map['aurelia-dependency-injection'] = name;
@@ -105,29 +105,24 @@ function runningLocally(){
   return window.location.protocol !== 'http' && window.location.protocol !== 'https';
 }
 
-/**
- * @param {DOM element} appHost - Somebody's name.
- * @param {String} attribName - name of attribute to find
- */
-function handleApp(appHost, attribName){
-  attribName = attribName || 'aurelia-app';
-  var configModuleId = appHost.getAttribute(attribName),
-  return configModuleId ? aureliaLoader.config(configModuleId) : aureliaLoader.defaultConfig();
+function handleApp(appHost){
+  let configModuleId = appHost.getAttribute('aurelia-app');
+  return configModuleId ? aureliaLoader.config(appHost, configModuleId) : aureliaLoader.defaultConfig(appHost);
 }
 
-var aureliaLoader = {
-  config: function(configModuleId) {
-    var loader = new window.AureliaLoader();
+const aureliaLoader = {
+  config(appHost, configModuleId) {
+    let loader = new window.AureliaLoader();
 
     return loader.loadModule(configModuleId)
       .then(m => {
-        var aurelia = new Aurelia(loader);
+        let aurelia = new Aurelia(loader);
         aurelia.host = appHost;
         return m.configure(aurelia);
       });
   },
-  defaultConfig: function() {
-    var aurelia = new Aurelia();
+  defaultConfig(appHost) {
+    let aurelia = new Aurelia();
     aurelia.host = appHost;
 
     if (runningLocally()) {
@@ -142,11 +137,11 @@ var aureliaLoader = {
 
 function run() {
   return ready(window).then(doc => {
-    var appHost = doc.querySelectorAll("[aurelia-app]");
+    let appHost = doc.querySelectorAll('[aurelia-app]');
 
     return ensureLoader().then(() => {
-      return preparePlatform().then(function(){
-        var i, ii;
+      return preparePlatform().then(() => {
+        let i, ii;
 
         for (i = 0, ii = appHost.length; i < ii; ++i) {
           handleApp(appHost[i]);
