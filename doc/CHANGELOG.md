@@ -1,3 +1,15 @@
+## 0.17.0 (2015-09-05)
+
+
+#### Bug Fixes
+
+* **all:** address issues with incorrect code in the last PR; update to more ES6 syntax ([63a5bea3](http://github.com/aurelia/bootstrapper/commit/63a5bea348fe407af04be28741e15e5aa9db352f))
+* **build:**
+  * d.ts generation and doc generation ([43dba2b7](http://github.com/aurelia/bootstrapper/commit/43dba2b71032638aa22897c9dbf64b312be2e1e3))
+  * update linting, testing and tools ([b0fcc33b](http://github.com/aurelia/bootstrapper/commit/b0fcc33bfdff3ed4f2ca0032b035385d80457d18))
+* **index:** remove html import polyfill load ([8d99882d](http://github.com/aurelia/bootstrapper/commit/8d99882d6eca2fa16be64cd3798575d697937743))
+
+
 ## 0.16.0 (2015-08-14)
 
 

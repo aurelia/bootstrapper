@@ -1,4 +1,4 @@
-define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], function (exports, _coreJs, _aureliaFramework, _aureliaLoggingConsole) {
+define(['exports', 'core-js', 'aurelia-framework'], function (exports, _coreJs, _aureliaFramework) {
   'use strict';
 
   exports.__esModule = true;
@@ -30,8 +30,8 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
 
   function bootstrap(configure) {
     return onReady(function () {
-      var loader = new window.AureliaLoader(),
-          aurelia = new _aureliaFramework.Aurelia(loader);
+      var loader = new window.AureliaLoader();
+      var aurelia = new _aureliaFramework.Aurelia(loader);
 
       return configure(aurelia);
     });
@@ -39,16 +39,16 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
 
   function ready(global) {
     return new Promise(function (resolve, reject) {
-      if (global.document.readyState === "complete") {
+      if (global.document.readyState === 'complete') {
         resolve(global.document);
       } else {
-        global.document.addEventListener("DOMContentLoaded", completed, false);
-        global.addEventListener("load", completed, false);
+        global.document.addEventListener('DOMContentLoaded', completed, false);
+        global.addEventListener('load', completed, false);
       }
 
       function completed() {
-        global.document.removeEventListener("DOMContentLoaded", completed, false);
-        global.removeEventListener("load", completed, false);
+        global.document.removeEventListener('DOMContentLoaded', completed, false);
+        global.removeEventListener('load', completed, false);
         resolve(global.document);
       }
     });
@@ -66,9 +66,9 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
         return new Promise(function (resolve, reject) {
           require(['aurelia-loader-default'], resolve, reject);
         });
-      } else {
-        throw new Error('No window.AureliaLoader is defined and there is neither a System API (ES6) or a Require API (AMD) available to load your app.');
       }
+
+      throw new Error('No window.AureliaLoader is defined and there is neither a System API (ES6) or a Require API (AMD) available to load your app.');
     }
 
     return Promise.resolve();
@@ -94,14 +94,7 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
             System.map['aurelia-logging-console'] = name;
           }));
 
-          if (!('import' in document.createElement('link'))) {
-            logger.debug('loading the HTMLImports polyfill');
-            toLoad.push(System.normalize('webcomponentsjs/HTMLImports.min', loaderName).then(function (name) {
-              return System['import'](name);
-            }));
-          }
-
-          if (!("content" in document.createElement("template"))) {
+          if (!('content' in document.createElement('template'))) {
             logger.debug('loading the HTMLTemplateElement polyfill');
             toLoad.push(System.normalize('aurelia-html-template-element', loaderName).then(function (name) {
               return System['import'](name);
@@ -119,20 +112,22 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
   }
 
   function handleApp(appHost) {
-    var configModuleId = appHost.getAttribute('aurelia-app'),
-        aurelia,
-        loader;
+    var configModuleId = appHost.getAttribute('aurelia-app');
+    return configModuleId ? aureliaLoader.config(appHost, configModuleId) : aureliaLoader.defaultConfig(appHost);
+  }
 
-    if (configModuleId) {
-      loader = new window.AureliaLoader();
+  var aureliaLoader = {
+    config: function config(appHost, configModuleId) {
+      var loader = new window.AureliaLoader();
 
       return loader.loadModule(configModuleId).then(function (m) {
-        aurelia = new _aureliaFramework.Aurelia(loader);
+        var aurelia = new _aureliaFramework.Aurelia(loader);
         aurelia.host = appHost;
         return m.configure(aurelia);
       });
-    } else {
-      aurelia = new _aureliaFramework.Aurelia();
+    },
+    defaultConfig: function defaultConfig(appHost) {
+      var aurelia = new _aureliaFramework.Aurelia();
       aurelia.host = appHost;
 
       if (runningLocally()) {
@@ -145,22 +140,20 @@ define(['exports', 'core-js', 'aurelia-framework', 'aurelia-logging-console'], f
         return a.setRoot();
       });
     }
-  }
+  };
 
   function run() {
     return ready(window).then(function (doc) {
-      var appHost = doc.querySelectorAll("[aurelia-app]");
+      var appHost = doc.querySelectorAll('[aurelia-app]');
 
       return ensureLoader().then(function () {
         return preparePlatform().then(function () {
-          var i, ii;
-
-          for (i = 0, ii = appHost.length; i < ii; ++i) {
+          for (var i = 0, ii = appHost.length; i < ii; ++i) {
             handleApp(appHost[i]);
           }
 
           isReady = true;
-          for (i = 0, ii = readyQueue.length; i < ii; ++i) {
+          for (var i = 0, ii = readyQueue.length; i < ii; ++i) {
             readyQueue[i]();
           }
           readyQueue = [];
