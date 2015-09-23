@@ -1,33 +1,25 @@
 /*eslint no-unused-vars:0*/
 import core from 'core-js';
-import {Aurelia, LogManager} from 'aurelia-framework';
 
-let logger = LogManager.getLogger('bootstrapper');
-let readyQueue = [];
-let isReady = false;
+let bootstrapQueue = [];
+let sharedLoader = null;
+let Aurelia = null;
 
-function onReady(callback) {
+//TODO: initialize PAL
+
+function onBootstrap(callback) {
   return new Promise((resolve, reject) => {
-    if (!isReady) {
-      readyQueue.push(() => {
+    if (sharedLoader) {
+      resolve(callback(sharedLoader));
+    } else {
+      bootstrapQueue.push(() => {
         try {
-          resolve(callback());
+          resolve(callback(sharedLoader));
         } catch (e) {
           reject(e);
         }
       });
-    } else {
-      resolve(callback());
     }
-  });
-}
-
-export function bootstrap(configure: (aurelia:Aurelia) => void): Promise<void> {
-  return onReady(() => {
-    let loader = new window.AureliaLoader();
-    let aurelia = new Aurelia(loader);
-
-    return configure(aurelia);
   });
 }
 
@@ -48,72 +40,55 @@ function ready(global) {
   });
 }
 
-function ensureLoader() {
-  if (!window.AureliaLoader) {
-    if (window.System && !window.System.isFake) {
-      return System.normalize('aurelia-bootstrapper').then(bootstrapperName => {
-        return System.normalize('aurelia-loader-default', bootstrapperName).then(loaderName => {
-          return System.import(loaderName);
-        });
-      });
-    } else if (window.require) {
-      return new Promise((resolve, reject) => {
-        require(['aurelia-loader-default'], resolve, reject);
-      });
-    }
-
-    throw new Error('No window.AureliaLoader is defined and there is neither a System API (ES6) or a Require API (AMD) available to load your app.');
+function createLoader() {
+  if(window.AureliaLoader) {
+    return Promise.resolve(new window.AureliaLoader());
   }
 
-  return Promise.resolve();
+  if (window.System) {
+    let bootstrapperName = System.normalizeSync('aurelia-bootstrapper');
+    let loaderName = System.normalizeSync('aurelia-loader-default', bootstrapperName);
+    return System.import(loaderName).then(m => new m.DefaultLoader());
+  } else if (window.require) {
+    return new Promise((resolve, reject) => require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
+  }
+
+  throw new Error('No window.AureliaLoader is defined and there is neither a System API (ES6) or a Require API (AMD) available to load your app.');
 }
 
-function preparePlatform() {
-  return System.normalize('aurelia-bootstrapper').then(function(bootstrapperName) {
-    return System.normalize('aurelia-framework', bootstrapperName).then(function(frameworkName) {
-      System.map['aurelia-framework'] = frameworkName;
+function preparePlatform(loader) {
+  let bootstrapperName = loader.normalizeSync('aurelia-bootstrapper');
 
-      return System.normalize('aurelia-loader', frameworkName).then(function(loaderName) {
-        let toLoad = [];
+  let frameworkName = loader.normalizeSync('aurelia-framework', bootstrapperName);
+  loader.map('aurelia-framework', frameworkName);
 
-        toLoad.push(System.normalize('aurelia-dependency-injection', frameworkName).then(function(name) {
-          System.map['aurelia-dependency-injection'] = name;
-        }));
+  let loaderName = loader.normalizeSync('aurelia-loader', frameworkName);
 
-        toLoad.push(System.normalize('aurelia-router', bootstrapperName).then(function(name) {
-          System.map['aurelia-router'] = name;
-        }));
+  let diName = loader.normalizeSync('aurelia-dependency-injection', frameworkName);
+  loader.map('aurelia-dependency-injection', diName)
 
-        toLoad.push(System.normalize('aurelia-logging-console', bootstrapperName).then(function(name) {
-          System.map['aurelia-logging-console'] = name;
-        }));
+  let routerName = loader.normalizeSync('aurelia-router', bootstrapperName);
+  loader.map('aurelia-router', routerName);
 
-        if (!('content' in document.createElement('template'))) {
-          logger.debug('loading the HTMLTemplateElement polyfill');
-          toLoad.push(System.normalize('aurelia-html-template-element', loaderName).then(function(name) {
-            return System.import(name);
-          }));
-        }
+  let loggingConsoleName = loader.normalizeSync('aurelia-logging-console', bootstrapperName);
+  loader.map('aurelia-logging-console', loggingConsoleName);
 
-        return Promise.all(toLoad);
-      });
-    });
-  });
+  if('content' in document.createElement('template')) {
+    return loader.loadModule(frameworkName).then(m => Aurelia = m.Aurelia);
+  }
+
+  let tmplName = loader.normalizeSync('aurelia-html-template-element', loaderName);
+  return loader.loadModule(tmplName)
+    .then(() => loader.loadModule(frameworkName).then(m => Aurelia = m.Aurelia));
 }
 
-function runningLocally() {
-  return window.location.protocol !== 'http' && window.location.protocol !== 'https';
-}
-
-function handleApp(appHost) {
+function handleApp(loader, appHost) {
   let configModuleId = appHost.getAttribute('aurelia-app');
-  return configModuleId ? aureliaLoader.config(appHost, configModuleId) : aureliaLoader.defaultConfig(appHost);
+  return configModuleId ? aureliaLoader.config(loader, appHost, configModuleId) : aureliaLoader.defaultConfig(loader, appHost);
 }
 
 const aureliaLoader = {
-  config(appHost, configModuleId) {
-    let loader = new window.AureliaLoader();
-
+  config(loader, appHost, configModuleId) {
     return loader.loadModule(configModuleId)
       .then(m => {
         let aurelia = new Aurelia(loader);
@@ -121,11 +96,11 @@ const aureliaLoader = {
         return m.configure(aurelia);
       });
   },
-  defaultConfig(appHost) {
-    let aurelia = new Aurelia();
+  defaultConfig(loader, appHost) {
+    let aurelia = new Aurelia(loader);
     aurelia.host = appHost;
 
-    if (runningLocally()) {
+    if (window.location.protocol !== 'http' && window.location.protocol !== 'https') {
       aurelia.use.developmentLogging();
     }
 
@@ -138,20 +113,26 @@ const aureliaLoader = {
 function run() {
   return ready(window).then(doc => {
     let appHost = doc.querySelectorAll('[aurelia-app]');
-
-    return ensureLoader().then(() => {
-      return preparePlatform().then(() => {
+    return createLoader().then(loader => {
+      return preparePlatform(loader).then(() => {
         for (let i = 0, ii = appHost.length; i < ii; ++i) {
-          handleApp(appHost[i]);
+          handleApp(loader, appHost[i]);
         }
 
-        isReady = true;
-        for (let i = 0, ii = readyQueue.length; i < ii; ++i) {
-          readyQueue[i]();
+        sharedLoader = loader;
+        for (let i = 0, ii = bootstrapQueue.length; i < ii; ++i) {
+          bootstrapQueue[i]();
         }
-        readyQueue = [];
+        bootstrapQueue = null;
       });
     });
+  });
+}
+
+export function bootstrap(configure: (aurelia:Aurelia) => void): Promise<void> {
+  return onBootstrap(loader => {
+    let aurelia = new Aurelia(loader);
+    return configure(aurelia);
   });
 }
 
