@@ -1,5 +1,4 @@
-/*eslint no-unused-vars:0*/
-import core from 'core-js';
+import 'core-js';
 
 let bootstrapQueue = [];
 let sharedLoader = null;
@@ -41,7 +40,7 @@ function ready(global) {
 }
 
 function createLoader() {
-  if(window.AureliaLoader) {
+  if (window.AureliaLoader) {
     return Promise.resolve(new window.AureliaLoader());
   }
 
@@ -65,7 +64,7 @@ function preparePlatform(loader) {
   let loaderName = loader.normalizeSync('aurelia-loader', frameworkName);
 
   let diName = loader.normalizeSync('aurelia-dependency-injection', frameworkName);
-  loader.map('aurelia-dependency-injection', diName)
+  loader.map('aurelia-dependency-injection', diName);
 
   let routerName = loader.normalizeSync('aurelia-router', bootstrapperName);
   loader.map('aurelia-router', routerName);
@@ -73,7 +72,7 @@ function preparePlatform(loader) {
   let loggingConsoleName = loader.normalizeSync('aurelia-logging-console', bootstrapperName);
   loader.map('aurelia-logging-console', loggingConsoleName);
 
-  if('content' in document.createElement('template')) {
+  if ('content' in document.createElement('template')) {
     return loader.loadModule(frameworkName).then(m => Aurelia = m.Aurelia);
   }
 
@@ -129,7 +128,7 @@ function run() {
   });
 }
 
-export function bootstrap(configure: (aurelia:Aurelia) => void): Promise<void> {
+export function bootstrap(configure: Function): Promise<void> {
   return onBootstrap(loader => {
     let aurelia = new Aurelia(loader);
     return configure(aurelia);
