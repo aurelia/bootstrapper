@@ -115,7 +115,7 @@ function run() {
     return createLoader().then(loader => {
       return preparePlatform(loader).then(() => {
         for (let i = 0, ii = appHost.length; i < ii; ++i) {
-          handleApp(loader, appHost[i]);
+          handleApp(loader, appHost[i]).catch(logger.error.bind(logger));
         }
 
         sharedLoader = loader;
