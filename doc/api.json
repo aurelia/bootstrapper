@@ -28,41 +28,8 @@
               "kindString": "Parameter",
               "flags": {},
               "type": {
-                "type": "reflection",
-                "declaration": {
-                  "id": 6,
-                  "name": "__type",
-                  "kind": 65536,
-                  "kindString": "Type literal",
-                  "flags": {},
-                  "signatures": [
-                    {
-                      "id": 7,
-                      "name": "__call",
-                      "kind": 4096,
-                      "kindString": "Call signature",
-                      "flags": {},
-                      "parameters": [
-                        {
-                          "id": 8,
-                          "name": "aurelia",
-                          "kind": 32768,
-                          "kindString": "Parameter",
-                          "flags": {},
-                          "type": {
-                            "type": "reference",
-                            "name": "Aurelia",
-                            "id": 1459
-                          }
-                        }
-                      ],
-                      "type": {
-                        "type": "instrinct",
-                        "name": "void"
-                      }
-                    }
-                  ]
-                }
+                "type": "reference",
+                "name": "Function"
               }
             }
           ],
