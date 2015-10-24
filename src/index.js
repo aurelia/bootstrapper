@@ -121,6 +121,11 @@ function run() {
   });
 }
 
+/**
+ * Manually bootstraps an application.
+ * @param configure A callback which passes an Aurelia instance to the developer to manually configure and start up the app.
+ * @return A Promise that completes when configuration is done.
+ */
 export function bootstrap(configure: Function): Promise<void> {
   return onBootstrap(loader => {
     let aurelia = new Aurelia(loader);

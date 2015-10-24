@@ -20,6 +20,10 @@
           "kind": 4096,
           "kindString": "Call signature",
           "flags": {},
+          "comment": {
+            "shortText": "Manually bootstraps an application.",
+            "returns": "A Promise that completes when configuration is done.\n"
+          },
           "parameters": [
             {
               "id": 5,
@@ -27,6 +31,9 @@
               "kind": 32768,
               "kindString": "Parameter",
               "flags": {},
+              "comment": {
+                "text": "A callback which passes an Aurelia instance to the developer to manually configure and start up the app."
+              },
               "type": {
                 "type": "reference",
                 "name": "Function"
