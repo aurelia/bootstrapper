@@ -25,30 +25,30 @@
       "lib": "dist/amd"
     },
     "dependencies": {
-      "aurelia-event-aggregator": "github:aurelia/event-aggregator@^0.9.0",
-      "aurelia-framework": "github:aurelia/framework@^0.17.0",
-      "aurelia-history": "github:aurelia/history@^0.8.0",
-      "aurelia-history-browser": "github:aurelia/history-browser@^0.9.0",
-      "aurelia-loader-default": "github:aurelia/loader-default@^0.11.0",
-      "aurelia-logging-console": "github:aurelia/logging-console@^0.8.0",
-      "aurelia-pal": "github:aurelia/pal@^0.2.0",
-      "aurelia-pal-browser": "github:aurelia/pal-browser@^0.2.0",
-      "aurelia-router": "github:aurelia/router@^0.13.0",
-      "aurelia-templating": "github:aurelia/templating@^0.16.0",
-      "aurelia-templating-binding": "github:aurelia/templating-binding@^0.16.0",
-      "aurelia-templating-resources": "github:aurelia/templating-resources@^0.16.0",
-      "aurelia-templating-router": "github:aurelia/templating-router@^0.17.0",
-      "core-js": "npm:core-js@^0.9.5"
+      "aurelia-event-aggregator": "github:aurelia/event-aggregator@^0.10.0",
+      "aurelia-framework": "github:aurelia/framework@^0.18.0",
+      "aurelia-history": "github:aurelia/history@^0.9.0",
+      "aurelia-history-browser": "github:aurelia/history-browser@^0.10.0",
+      "aurelia-loader-default": "github:aurelia/loader-default@^0.12.0",
+      "aurelia-logging-console": "github:aurelia/logging-console@^0.9.0",
+      "aurelia-pal": "github:aurelia/pal@^0.3.0",
+      "aurelia-pal-browser": "github:aurelia/pal-browser@^0.3.0",
+      "aurelia-router": "github:aurelia/router@^0.14.0",
+      "aurelia-templating": "github:aurelia/templating@^0.17.0",
+      "aurelia-templating-binding": "github:aurelia/templating-binding@^0.17.0",
+      "aurelia-templating-resources": "github:aurelia/templating-resources@^0.17.0",
+      "aurelia-templating-router": "github:aurelia/templating-router@^0.18.0",
+      "core-js": "npm:core-js@^1.2.6"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.1.13",
       "babel-runtime": "npm:babel-runtime@^5.1.13",
-      "core-js": "npm:core-js@^0.9.5"
+      "core-js": "npm:core-js@^1.2.6"
     }
   },
   "devDependencies": {
     "aurelia-tools": "^0.1.12",
-    "babel-dts-generator": "^0.2.9",
+    "babel-dts-generator": "^0.2.16",
     "babel-eslint": "^4.1.1",
     "conventional-changelog": "0.0.11",
     "del": "^1.1.0",
