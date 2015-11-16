@@ -1,6 +1,6 @@
 {
   "name": "aurelia-bootstrapper",
-  "version": "0.19.0",
+  "version": "1.0.0-beta.1",
   "description": "Sets up the default configuration for the aurelia framework and gets you up and running quick and easy.",
   "keywords": [
     "aurelia",
@@ -17,19 +17,19 @@
     "url": "http://github.com/aurelia/bootstrapper"
   },
   "dependencies": {
-    "aurelia-event-aggregator": "^0.10.0",
-    "aurelia-framework": "^0.18.0",
-    "aurelia-history": "^0.9.0",
-    "aurelia-history-browser": "^0.10.0",
-    "aurelia-loader-default": "^0.12.0",
-    "aurelia-logging-console": "^0.9.0",
-    "aurelia-pal": "^0.3.0",
-    "aurelia-pal-browser": "^0.3.0",
-    "aurelia-router": "^0.14.0",
-    "aurelia-templating": "^0.17.0",
-    "aurelia-templating-binding": "^0.17.0",
-    "aurelia-templating-resources": "^0.17.0",
-    "aurelia-templating-router": "^0.18.0",
+    "aurelia-event-aggregator": "^1.0.0-beta.1",
+    "aurelia-framework": "^1.0.0-beta.1",
+    "aurelia-history": "^1.0.0-beta.1",
+    "aurelia-history-browser": "^1.0.0-beta.1",
+    "aurelia-loader-default": "^1.0.0-beta.1",
+    "aurelia-logging-console": "^1.0.0-beta.1",
+    "aurelia-pal": "^1.0.0-beta.1",
+    "aurelia-pal-browser": "^1.0.0-beta.1",
+    "aurelia-router": "^1.0.0-beta.1",
+    "aurelia-templating": "^1.0.0-beta.1",
+    "aurelia-templating-binding": "^1.0.0-beta.1",
+    "aurelia-templating-resources": "^1.0.0-beta.1.0.1",
+    "aurelia-templating-router": "^1.0.0-beta.1.0.1",
     "core-js": "zloirock/core-js"
   }
 }

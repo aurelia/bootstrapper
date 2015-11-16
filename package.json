@@ -1,6 +1,6 @@
 {
   "name": "aurelia-bootstrapper",
-  "version": "0.19.0",
+  "version": "1.0.0-beta.1",
   "description": "Sets up the default configuration for the aurelia framework and gets you up and running quick and easy.",
   "keywords": [
     "aurelia",
@@ -18,6 +18,7 @@
     "type": "git",
     "url": "http://github.com/aurelia/bootstrapper"
   },
+  "jspmNodeConversion": false,
   "jspm": {
     "main": "aurelia-bootstrapper",
     "format": "amd",
@@ -25,19 +26,19 @@
       "lib": "dist/amd"
     },
     "dependencies": {
-      "aurelia-event-aggregator": "github:aurelia/event-aggregator@^0.10.0",
-      "aurelia-framework": "github:aurelia/framework@^0.18.0",
-      "aurelia-history": "github:aurelia/history@^0.9.0",
-      "aurelia-history-browser": "github:aurelia/history-browser@^0.10.0",
-      "aurelia-loader-default": "github:aurelia/loader-default@^0.12.0",
-      "aurelia-logging-console": "github:aurelia/logging-console@^0.9.0",
-      "aurelia-pal": "github:aurelia/pal@^0.3.0",
-      "aurelia-pal-browser": "github:aurelia/pal-browser@^0.3.0",
-      "aurelia-router": "github:aurelia/router@^0.14.0",
-      "aurelia-templating": "github:aurelia/templating@^0.17.0",
-      "aurelia-templating-binding": "github:aurelia/templating-binding@^0.17.0",
-      "aurelia-templating-resources": "github:aurelia/templating-resources@^0.17.0",
-      "aurelia-templating-router": "github:aurelia/templating-router@^0.18.0",
+      "aurelia-event-aggregator": "npm:aurelia-event-aggregator@^1.0.0-beta.1",
+      "aurelia-framework": "npm:aurelia-framework@^1.0.0-beta.1",
+      "aurelia-history": "npm:aurelia-history@^1.0.0-beta.1",
+      "aurelia-history-browser": "npm:aurelia-history-browser@^1.0.0-beta.1",
+      "aurelia-loader-default": "npm:aurelia-loader-default@^1.0.0-beta.1",
+      "aurelia-logging-console": "npm:aurelia-logging-console@^1.0.0-beta.1",
+      "aurelia-pal": "npm:aurelia-pal@^1.0.0-beta.1",
+      "aurelia-pal-browser": "npm:aurelia-pal-browser@^1.0.0-beta.1",
+      "aurelia-router": "npm:aurelia-router@^1.0.0-beta.1",
+      "aurelia-templating": "npm:aurelia-templating@^1.0.0-beta.1",
+      "aurelia-templating-binding": "npm:aurelia-templating-binding@^1.0.0-beta.1",
+      "aurelia-templating-resources": "npm:aurelia-templating-resources@^1.0.0-beta.1.0.1",
+      "aurelia-templating-router": "npm:aurelia-templating-router@^1.0.0-beta.1.0.1",
       "core-js": "npm:core-js@^1.2.6"
     },
     "devDependencies": {
@@ -46,9 +47,25 @@
       "core-js": "npm:core-js@^1.2.6"
     }
   },
+  "dependencies": {
+    "aurelia-event-aggregator": "^1.0.0-beta.1",
+    "aurelia-framework": "^1.0.0-beta.1",
+    "aurelia-history": "^1.0.0-beta.1",
+    "aurelia-history-browser": "^1.0.0-beta.1",
+    "aurelia-loader-default": "^1.0.0-beta.1",
+    "aurelia-logging-console": "^1.0.0-beta.1",
+    "aurelia-pal": "^1.0.0-beta.1",
+    "aurelia-pal-browser": "^1.0.0-beta.1",
+    "aurelia-router": "^1.0.0-beta.1",
+    "aurelia-templating": "^1.0.0-beta.1",
+    "aurelia-templating-binding": "^1.0.0-beta.1",
+    "aurelia-templating-resources": "^1.0.0-beta.1.0.1",
+    "aurelia-templating-router": "^1.0.0-beta.1.0.1",
+    "core-js": "^1.2.6"
+  },
   "devDependencies": {
     "aurelia-tools": "^0.1.12",
-    "babel-dts-generator": "^0.2.16",
+    "babel-dts-generator": "^0.2.17",
     "babel-eslint": "^4.1.1",
     "conventional-changelog": "0.0.11",
     "del": "^1.1.0",
@@ -60,7 +77,7 @@
     "gulp-typedoc": "^1.2.1",
     "gulp-typedoc-extractor": "0.0.8",
     "jasmine-core": "^2.1.3",
-    "karma": "^0.12.28",
+    "karma": "^0.13.15",
     "karma-babel-preprocessor": "^5.2.2",
     "karma-chrome-launcher": "^0.1.7",
     "karma-coverage": "^0.3.1",
