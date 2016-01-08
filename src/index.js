@@ -44,14 +44,14 @@ function createLoader() {
     return Promise.resolve(new PLATFORM.Loader());
   }
 
-  if (window.System) {
+  if (window.require) {
+    return new Promise((resolve, reject) => require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
+  } else if (window.System) {
     return System.normalize('aurelia-bootstrapper').then(bootstrapperName => {
       return System.normalize('aurelia-loader-default', bootstrapperName);
     }).then(loaderName => {
       return System.import(loaderName).then(m => new m.DefaultLoader());
     });
-  } else if (window.require) {
-    return new Promise((resolve, reject) => require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
   }
 
   return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
