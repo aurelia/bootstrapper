@@ -1,3 +1,16 @@
+### 1.0.0-beta.1.0.1 (2016-01-08)
+
+
+#### Bug Fixes
+
+* **all:** switch requirejs/system.js check order ([383161e9](http://github.com/aurelia/bootstrapper/commit/383161e933a0b4ecb2d1163a9535307cad6f4379), closes [#26](http://github.com/aurelia/bootstrapper/issues/26))
+
+
+#### Features
+
+* **all:** switch normalizeSync to normalize api ([35e4b10e](http://github.com/aurelia/bootstrapper/commit/35e4b10e05b4bc2972a85210fb346b9b90e96e50))
+
+
 ### 1.0.0-beta.1 (2015-11-16)
 
 
