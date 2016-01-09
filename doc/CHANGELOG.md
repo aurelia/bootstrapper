@@ -1,3 +1,11 @@
+### 1.0.0-beta.1.0.2 (2016-01-08)
+
+
+#### Bug Fixes
+
+* **index:** compose promises ([75f1a33b](http://github.com/aurelia/bootstrapper/commit/75f1a33be2cc31bee29fc2cfd42989142bcacb18))
+
+
 ### 1.0.0-beta.1.0.1 (2016-01-08)
 
 

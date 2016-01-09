@@ -70,7 +70,7 @@ function preparePlatform(loader) {
         loader.normalize('aurelia-logging-console', bootstrapperName)
           .then(loggingConsoleName => loader.map('aurelia-logging-console', loggingConsoleName))
       ]).then(() => {
-        loader.loadModule(frameworkName).then(m => Aurelia = m.Aurelia);
+        return loader.loadModule(frameworkName).then(m => Aurelia = m.Aurelia);
       });
     });
   });

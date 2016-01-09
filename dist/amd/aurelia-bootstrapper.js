@@ -77,7 +77,7 @@ define(['exports', 'core-js', 'aurelia-pal', 'aurelia-pal-browser'], function (e
         }), loader.normalize('aurelia-logging-console', bootstrapperName).then(function (loggingConsoleName) {
           return loader.map('aurelia-logging-console', loggingConsoleName);
         })]).then(function () {
-          loader.loadModule(frameworkName).then(function (m) {
+          return loader.loadModule(frameworkName).then(function (m) {
             return Aurelia = m.Aurelia;
           });
         });
