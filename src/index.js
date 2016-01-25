@@ -44,7 +44,7 @@ function createLoader() {
     return Promise.resolve(new PLATFORM.Loader());
   }
 
-  if(window.System && typeof window.System.import === 'function') {
+  if (window.System && typeof window.System.import === 'function') {
     return System.normalize('aurelia-bootstrapper').then(bootstrapperName => {
       return System.normalize('aurelia-loader-default', bootstrapperName);
     }).then(loaderName => {
@@ -52,7 +52,7 @@ function createLoader() {
     });
   }
 
-  if(typeof window.require === 'function') {
+  if (typeof window.require === 'function') {
     return new Promise((resolve, reject) => require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
   }
 
