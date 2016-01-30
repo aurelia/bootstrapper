@@ -1,3 +1,16 @@
+### 1.0.0-beta.1.1.0 (2016-01-29)
+
+
+#### Bug Fixes
+
+* **index:** change loader detection to work in more environments ([9a5c169a](http://github.com/aurelia/bootstrapper/commit/9a5c169afa1d72814c9b04c735b3e448d5e3430f))
+
+
+#### Features
+
+* **all:** update jspm meta; core-js; aurelia deps ([65079e91](http://github.com/aurelia/bootstrapper/commit/65079e9135576a7a71226034f2af6ed728946e16))
+
+
 ### 1.0.0-beta.1.0.2 (2016-01-08)
 
 

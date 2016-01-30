@@ -43,19 +43,21 @@ System.register(['core-js', 'aurelia-pal', 'aurelia-pal-browser'], function (_ex
       return Promise.resolve(new PLATFORM.Loader());
     }
 
-    if (window.require) {
-      return new Promise(function (resolve, reject) {
-        return require(['aurelia-loader-default'], function (m) {
-          return resolve(new m.DefaultLoader());
-        }, reject);
-      });
-    } else if (window.System) {
+    if (window.System && typeof window.System['import'] === 'function') {
       return System.normalize('aurelia-bootstrapper').then(function (bootstrapperName) {
         return System.normalize('aurelia-loader-default', bootstrapperName);
       }).then(function (loaderName) {
         return System['import'](loaderName).then(function (m) {
           return new m.DefaultLoader();
         });
+      });
+    }
+
+    if (typeof window.require === 'function') {
+      return new Promise(function (resolve, reject) {
+        return require(['aurelia-loader-default'], function (m) {
+          return resolve(new m.DefaultLoader());
+        }, reject);
       });
     }
 
