@@ -79,28 +79,22 @@ function preparePlatform(loader) {
 }
 
 function handleApp(loader, appHost) {
-  const configModuleId = appHost.getAttribute('aurelia-app');
-  return configModuleId ? customConfig(loader, appHost, configModuleId) : defaultConfig(loader, appHost);
+  return config(loader, appHost, appHost.getAttribute('aurelia-app'));
 }
 
-function customConfig(loader, appHost, configModuleId) {
-  return loader.loadModule(configModuleId)
-    .then(m => {
-      const aurelia = new Aurelia(loader);
-      aurelia.host = appHost;
-      return m.configure(aurelia);
-    });
-}
-
-function defaultConfig(loader, appHost) {
+function config(loader, appHost, configModuleId) {
   const aurelia = new Aurelia(loader);
   aurelia.host = appHost;
+
+  if (configModuleId) {
+    return loader.loadModule(configModuleId).then(customConfig => customConfig.configure(aurelia));
+  }
 
   aurelia.use
     .standardConfiguration()
     .developmentLogging();
 
-  return aurelia.start().then(a => a.setRoot());
+  return aurelia.start().then(() => aurelia.setRoot());
 }
 
 function run() {
