@@ -96,11 +96,9 @@ function defaultConfig(loader, appHost) {
   const aurelia = new Aurelia(loader);
   aurelia.host = appHost;
 
-  if (window.location.protocol !== 'http' && window.location.protocol !== 'https') {
-    aurelia.use.developmentLogging();
-  }
-
-  aurelia.use.standardConfiguration();
+  aurelia.use
+    .standardConfiguration()
+    .developmentLogging();
 
   return aurelia.start().then(a => a.setRoot());
 }
