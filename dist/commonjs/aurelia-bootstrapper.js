@@ -34,13 +34,13 @@ function ready(global) {
     if (global.document.readyState === 'complete') {
       resolve(global.document);
     } else {
-      global.document.addEventListener('DOMContentLoaded', completed, false);
-      global.addEventListener('load', completed, false);
+      global.document.addEventListener('DOMContentLoaded', completed);
+      global.addEventListener('load', completed);
     }
 
     function completed() {
-      global.document.removeEventListener('DOMContentLoaded', completed, false);
-      global.removeEventListener('load', completed, false);
+      global.document.removeEventListener('DOMContentLoaded', completed);
+      global.removeEventListener('load', completed);
       resolve(global.document);
     }
   });
@@ -93,30 +93,23 @@ function preparePlatform(loader) {
 }
 
 function handleApp(loader, appHost) {
-  var configModuleId = appHost.getAttribute('aurelia-app');
-  return configModuleId ? customConfig(loader, appHost, configModuleId) : defaultConfig(loader, appHost);
+  return config(loader, appHost, appHost.getAttribute('aurelia-app'));
 }
 
-function customConfig(loader, appHost, configModuleId) {
-  return loader.loadModule(configModuleId).then(function (m) {
-    var aurelia = new Aurelia(loader);
-    aurelia.host = appHost;
-    return m.configure(aurelia);
-  });
-}
-
-function defaultConfig(loader, appHost) {
+function config(loader, appHost, configModuleId) {
   var aurelia = new Aurelia(loader);
   aurelia.host = appHost;
 
-  if (window.location.protocol !== 'http' && window.location.protocol !== 'https') {
-    aurelia.use.developmentLogging();
+  if (configModuleId) {
+    return loader.loadModule(configModuleId).then(function (customConfig) {
+      return customConfig.configure(aurelia);
+    });
   }
 
-  aurelia.use.standardConfiguration();
+  aurelia.use.standardConfiguration().developmentLogging();
 
-  return aurelia.start().then(function (a) {
-    return a.setRoot();
+  return aurelia.start().then(function () {
+    return aurelia.setRoot();
   });
 }
 

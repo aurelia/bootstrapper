@@ -1,3 +1,12 @@
+### 1.0.0-beta.1.1.2 (2016-02-08)
+
+
+#### Bug Fixes
+
+* **index:** remove check for localhost ([0f769f4b](http://github.com/aurelia/bootstrapper/commit/0f769f4b88ed96d7a8c4e67181241a5bccb4e881))
+* **lint:** fix eslint config ([a25b4b4e](http://github.com/aurelia/bootstrapper/commit/a25b4b4e662b22af8724347ba62d994274171c4f))
+
+
 ### 1.0.0-beta.1.1.0 (2016-01-29)
 
 

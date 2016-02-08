@@ -27,13 +27,13 @@ function ready(global) {
     if (global.document.readyState === 'complete') {
       resolve(global.document);
     } else {
-      global.document.addEventListener('DOMContentLoaded', completed, false);
-      global.addEventListener('load', completed, false);
+      global.document.addEventListener('DOMContentLoaded', completed);
+      global.addEventListener('load', completed);
     }
 
     function completed() {
-      global.document.removeEventListener('DOMContentLoaded', completed, false);
-      global.removeEventListener('load', completed, false);
+      global.document.removeEventListener('DOMContentLoaded', completed);
+      global.removeEventListener('load', completed);
       resolve(global.document);
     }
   });
@@ -79,37 +79,29 @@ function preparePlatform(loader) {
 }
 
 function handleApp(loader, appHost) {
-  let configModuleId = appHost.getAttribute('aurelia-app');
-  return configModuleId ? customConfig(loader, appHost, configModuleId) : defaultConfig(loader, appHost);
+  return config(loader, appHost, appHost.getAttribute('aurelia-app'));
 }
 
-function customConfig(loader, appHost, configModuleId) {
-  return loader.loadModule(configModuleId)
-    .then(m => {
-      let aurelia = new Aurelia(loader);
-      aurelia.host = appHost;
-      return m.configure(aurelia);
-    });
-}
-
-function defaultConfig(loader, appHost) {
-  let aurelia = new Aurelia(loader);
+function config(loader, appHost, configModuleId) {
+  const aurelia = new Aurelia(loader);
   aurelia.host = appHost;
 
-  if (window.location.protocol !== 'http' && window.location.protocol !== 'https') {
-    aurelia.use.developmentLogging();
+  if (configModuleId) {
+    return loader.loadModule(configModuleId).then(customConfig => customConfig.configure(aurelia));
   }
 
-  aurelia.use.standardConfiguration();
+  aurelia.use
+    .standardConfiguration()
+    .developmentLogging();
 
-  return aurelia.start().then(a => a.setRoot());
+  return aurelia.start().then(() => aurelia.setRoot());
 }
 
 function run() {
   return ready(window).then(doc => {
     initialize();
 
-    let appHost = doc.querySelectorAll('[aurelia-app]');
+    const appHost = doc.querySelectorAll('[aurelia-app]');
     return createLoader().then(loader => {
       return preparePlatform(loader).then(() => {
         for (let i = 0, ii = appHost.length; i < ii; ++i) {
@@ -133,7 +125,7 @@ function run() {
  */
 export function bootstrap(configure: Function): Promise<void> {
   return onBootstrap(loader => {
-    let aurelia = new Aurelia(loader);
+    const aurelia = new Aurelia(loader);
     return configure(aurelia);
   });
 }
