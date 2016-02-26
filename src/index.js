@@ -1,4 +1,3 @@
-import 'core-js';
 import {PLATFORM} from 'aurelia-pal';
 import {initialize} from 'aurelia-pal-browser';
 
