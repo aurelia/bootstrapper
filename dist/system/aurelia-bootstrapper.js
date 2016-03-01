@@ -1,4 +1,4 @@
-System.register(['core-js', 'aurelia-pal', 'aurelia-pal-browser'], function (_export) {
+System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], function (_export) {
   'use strict';
 
   var PLATFORM, initialize, bootstrapQueue, sharedLoader, Aurelia;
@@ -134,7 +134,7 @@ System.register(['core-js', 'aurelia-pal', 'aurelia-pal-browser'], function (_ex
   }
 
   return {
-    setters: [function (_coreJs) {}, function (_aureliaPal) {
+    setters: [function (_aureliaPolyfills) {}, function (_aureliaPal) {
       PLATFORM = _aureliaPal.PLATFORM;
     }, function (_aureliaPalBrowser) {
       initialize = _aureliaPalBrowser.initialize;

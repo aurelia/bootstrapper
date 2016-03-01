@@ -3,7 +3,7 @@
 exports.__esModule = true;
 exports.bootstrap = bootstrap;
 
-require('core-js');
+require('aurelia-polyfills');
 
 var _aureliaPal = require('aurelia-pal');
 

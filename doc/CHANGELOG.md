@@ -1,3 +1,16 @@
+### 1.0.0-beta.1.1.3 (2016-03-01)
+
+
+#### Bug Fixes
+
+* **all:** remove core-js ([60ef61a5](http://github.com/aurelia/bootstrapper/commit/60ef61a5f6cd83ce0f29c0b9242ee2aae7a47f8c))
+
+
+#### Features
+
+* **index:** use aurelia polyfills ([c77c982b](http://github.com/aurelia/bootstrapper/commit/c77c982ba24a01bf3528d887898f0895784d74ca))
+
+
 ### 1.0.0-beta.1.1.2 (2016-02-08)
 
 

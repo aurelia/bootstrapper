@@ -1,5 +1,5 @@
 declare module 'aurelia-bootstrapper' {
-  import 'core-js';
+  import 'aurelia-polyfills';
   import { PLATFORM }  from 'aurelia-pal';
   import { initialize }  from 'aurelia-pal-browser';
   

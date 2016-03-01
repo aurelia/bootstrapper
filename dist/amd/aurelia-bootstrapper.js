@@ -1,4 +1,4 @@
-define(['exports', 'core-js', 'aurelia-pal', 'aurelia-pal-browser'], function (exports, _coreJs, _aureliaPal, _aureliaPalBrowser) {
+define(['exports', 'aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], function (exports, _aureliaPolyfills, _aureliaPal, _aureliaPalBrowser) {
   'use strict';
 
   exports.__esModule = true;
