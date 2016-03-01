@@ -22,7 +22,7 @@ System.config({
     "aurelia-logging-console": "npm:aurelia-logging-console@1.0.0-beta.1.1.3",
     "aurelia-pal": "npm:aurelia-pal@1.0.0-beta.1.1.1",
     "aurelia-pal-browser": "npm:aurelia-pal-browser@1.0.0-beta.1.1.2",
-    "aurelia-polyfills": "npm:aurelia-polyfills@0.1.2",
+    "aurelia-polyfills": "npm:aurelia-polyfills@1.0.0-beta.1.0.0",
     "aurelia-router": "npm:aurelia-router@1.0.0-beta.1.1.0",
     "aurelia-templating": "npm:aurelia-templating@1.0.0-beta.1.1.0",
     "aurelia-templating-binding": "npm:aurelia-templating-binding@1.0.0-beta.1.1.0",
@@ -99,7 +99,7 @@ System.config({
       "aurelia-pal": "npm:aurelia-pal@1.0.0-beta.1.1.1",
       "core-js": "npm:core-js@2.0.3"
     },
-    "npm:aurelia-polyfills@0.1.2": {
+    "npm:aurelia-polyfills@1.0.0-beta.1.0.0": {
       "aurelia-pal": "npm:aurelia-pal@1.0.0-beta.1.1.1"
     },
     "npm:aurelia-route-recognizer@1.0.0-beta.1.1.0": {
