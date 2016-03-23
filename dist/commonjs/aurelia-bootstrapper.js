@@ -1,6 +1,8 @@
 'use strict';
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.bootstrap = bootstrap;
 
 require('aurelia-polyfills');
@@ -51,11 +53,11 @@ function createLoader() {
     return Promise.resolve(new _aureliaPal.PLATFORM.Loader());
   }
 
-  if (window.System && typeof window.System['import'] === 'function') {
+  if (window.System && typeof window.System.import === 'function') {
     return System.normalize('aurelia-bootstrapper').then(function (bootstrapperName) {
       return System.normalize('aurelia-loader-default', bootstrapperName);
     }).then(function (loaderName) {
-      return System['import'](loaderName).then(function (m) {
+      return System.import(loaderName).then(function (m) {
         return new m.DefaultLoader();
       });
     });
@@ -115,18 +117,18 @@ function config(loader, appHost, configModuleId) {
 
 function run() {
   return ready(window).then(function (doc) {
-    _aureliaPalBrowser.initialize();
+    (0, _aureliaPalBrowser.initialize)();
 
     var appHost = doc.querySelectorAll('[aurelia-app]');
     return createLoader().then(function (loader) {
       return preparePlatform(loader).then(function () {
         for (var i = 0, ii = appHost.length; i < ii; ++i) {
-          handleApp(loader, appHost[i])['catch'](console.error.bind(console));
+          handleApp(loader, appHost[i]).catch(console.error.bind(console));
         }
 
         sharedLoader = loader;
-        for (var i = 0, ii = bootstrapQueue.length; i < ii; ++i) {
-          bootstrapQueue[i]();
+        for (var _i = 0, _ii = bootstrapQueue.length; _i < _ii; ++_i) {
+          bootstrapQueue[_i]();
         }
         bootstrapQueue = null;
       });

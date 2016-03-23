@@ -1,9 +1,8 @@
-System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], function (_export) {
-  'use strict';
+'use strict';
 
+System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], function (_export, _context) {
   var PLATFORM, initialize, bootstrapQueue, sharedLoader, Aurelia;
 
-  _export('bootstrap', bootstrap);
 
   function onBootstrap(callback) {
     return new Promise(function (resolve, reject) {
@@ -43,11 +42,11 @@ System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], fun
       return Promise.resolve(new PLATFORM.Loader());
     }
 
-    if (window.System && typeof window.System['import'] === 'function') {
+    if (window.System && typeof window.System.import === 'function') {
       return System.normalize('aurelia-bootstrapper').then(function (bootstrapperName) {
         return System.normalize('aurelia-loader-default', bootstrapperName);
       }).then(function (loaderName) {
-        return System['import'](loaderName).then(function (m) {
+        return System.import(loaderName).then(function (m) {
           return new m.DefaultLoader();
         });
       });
@@ -113,23 +112,16 @@ System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], fun
       return createLoader().then(function (loader) {
         return preparePlatform(loader).then(function () {
           for (var i = 0, ii = appHost.length; i < ii; ++i) {
-            handleApp(loader, appHost[i])['catch'](console.error.bind(console));
+            handleApp(loader, appHost[i]).catch(console.error.bind(console));
           }
 
           sharedLoader = loader;
-          for (var i = 0, ii = bootstrapQueue.length; i < ii; ++i) {
-            bootstrapQueue[i]();
+          for (var _i = 0, _ii = bootstrapQueue.length; _i < _ii; ++_i) {
+            bootstrapQueue[_i]();
           }
           bootstrapQueue = null;
         });
       });
-    });
-  }
-
-  function bootstrap(configure) {
-    return onBootstrap(function (loader) {
-      var aurelia = new Aurelia(loader);
-      return configure(aurelia);
     });
   }
 
@@ -143,6 +135,14 @@ System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], fun
       bootstrapQueue = [];
       sharedLoader = null;
       Aurelia = null;
+      function bootstrap(configure) {
+        return onBootstrap(function (loader) {
+          var aurelia = new Aurelia(loader);
+          return configure(aurelia);
+        });
+      }
+
+      _export('bootstrap', bootstrap);
 
       run();
     }

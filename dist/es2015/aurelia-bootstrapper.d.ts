@@ -1,7 +1,11 @@
 declare module 'aurelia-bootstrapper' {
   import 'aurelia-polyfills';
-  import { PLATFORM }  from 'aurelia-pal';
-  import { initialize }  from 'aurelia-pal-browser';
+  import {
+    PLATFORM
+  } from 'aurelia-pal';
+  import {
+    initialize
+  } from 'aurelia-pal-browser';
   
   /**
    * Manually bootstraps an application.

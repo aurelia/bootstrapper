@@ -1,6 +1,6 @@
 import 'aurelia-polyfills';
-import {PLATFORM} from 'aurelia-pal';
-import {initialize} from 'aurelia-pal-browser';
+import { PLATFORM } from 'aurelia-pal';
+import { initialize } from 'aurelia-pal-browser';
 
 let bootstrapQueue = [];
 let sharedLoader = null;
@@ -64,14 +64,7 @@ function preparePlatform(loader) {
     return loader.normalize('aurelia-framework', bootstrapperName).then(frameworkName => {
       loader.map('aurelia-framework', frameworkName);
 
-      return Promise.all([
-        loader.normalize('aurelia-dependency-injection', frameworkName)
-          .then(diName => loader.map('aurelia-dependency-injection', diName)),
-        loader.normalize('aurelia-router', bootstrapperName)
-          .then(routerName => loader.map('aurelia-router', routerName)),
-        loader.normalize('aurelia-logging-console', bootstrapperName)
-          .then(loggingConsoleName => loader.map('aurelia-logging-console', loggingConsoleName))
-      ]).then(() => {
+      return Promise.all([loader.normalize('aurelia-dependency-injection', frameworkName).then(diName => loader.map('aurelia-dependency-injection', diName)), loader.normalize('aurelia-router', bootstrapperName).then(routerName => loader.map('aurelia-router', routerName)), loader.normalize('aurelia-logging-console', bootstrapperName).then(loggingConsoleName => loader.map('aurelia-logging-console', loggingConsoleName))]).then(() => {
         return loader.loadModule(frameworkName).then(m => Aurelia = m.Aurelia);
       });
     });
@@ -90,9 +83,7 @@ function config(loader, appHost, configModuleId) {
     return loader.loadModule(configModuleId).then(customConfig => customConfig.configure(aurelia));
   }
 
-  aurelia.use
-    .standardConfiguration()
-    .developmentLogging();
+  aurelia.use.standardConfiguration().developmentLogging();
 
   return aurelia.start().then(() => aurelia.setRoot());
 }
@@ -118,12 +109,7 @@ function run() {
   });
 }
 
-/**
- * Manually bootstraps an application.
- * @param configure A callback which passes an Aurelia instance to the developer to manually configure and start up the app.
- * @return A Promise that completes when configuration is done.
- */
-export function bootstrap(configure: Function): Promise<void> {
+export function bootstrap(configure) {
   return onBootstrap(loader => {
     const aurelia = new Aurelia(loader);
     return configure(aurelia);
