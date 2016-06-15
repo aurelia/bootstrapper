@@ -1,6 +1,8 @@
 'use strict';
 
 System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], function (_export, _context) {
+  "use strict";
+
   var PLATFORM, initialize, bootstrapQueue, sharedLoader, Aurelia;
 
 
