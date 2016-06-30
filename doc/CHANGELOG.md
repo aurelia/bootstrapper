@@ -1,3 +1,13 @@
+<a name="1.0.0-rc.1.0.1"></a>
+# [1.0.0-rc.1.0.1](https://github.com/aurelia/bootstrapper/compare/1.0.0-rc.1.0.0...v1.0.0-rc.1.0.1) (2016-06-30)
+
+
+### Features
+
+* **index:** pass config module id along to aurelia instance if present ([51a698c](https://github.com/aurelia/bootstrapper/commit/51a698c))
+
+
+
 <a name="1.0.0-rc.1.0.0"></a>
 # [1.0.0-rc.1.0.0](https://github.com/aurelia/bootstrapper/compare/1.0.0-beta.2.0.1...v1.0.0-rc.1.0.0) (2016-06-22)
 

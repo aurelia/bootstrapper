@@ -85,6 +85,7 @@ function handleApp(loader, appHost) {
 function config(loader, appHost, configModuleId) {
   const aurelia = new Aurelia(loader);
   aurelia.host = appHost;
+  aurelia.configModuleId = configModuleId || null;
 
   if (configModuleId) {
     return loader.loadModule(configModuleId).then(customConfig => customConfig.configure(aurelia));

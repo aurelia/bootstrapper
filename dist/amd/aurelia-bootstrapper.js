@@ -97,6 +97,7 @@ define(['exports', 'aurelia-pal', 'aurelia-pal-browser', 'aurelia-polyfills'], f
   function config(loader, appHost, configModuleId) {
     var aurelia = new Aurelia(loader);
     aurelia.host = appHost;
+    aurelia.configModuleId = configModuleId || null;
 
     if (configModuleId) {
       return loader.loadModule(configModuleId).then(function (customConfig) {
