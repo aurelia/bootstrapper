@@ -102,7 +102,7 @@ function config(loader, appHost, configModuleId) {
 function run() {
   return ready(window).then(doc => {
     initialize();
-    
+
     const appHost = doc.querySelectorAll('[aurelia-app],[data-aurelia-app]');
     return createLoader().then(loader => {
       return preparePlatform(loader).then(() => {
