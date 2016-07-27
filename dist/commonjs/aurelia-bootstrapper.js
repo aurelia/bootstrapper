@@ -95,7 +95,8 @@ function preparePlatform(loader) {
 }
 
 function handleApp(loader, appHost) {
-  return config(loader, appHost, appHost.getAttribute('aurelia-app'));
+  var moduleId = appHost.getAttribute('aurelia-app') || appHost.getAttribute('data-aurelia-app');
+  return config(loader, appHost, moduleId);
 }
 
 function config(loader, appHost, configModuleId) {
@@ -120,7 +121,7 @@ function run() {
   return ready(window).then(function (doc) {
     (0, _aureliaPalBrowser.initialize)();
 
-    var appHost = doc.querySelectorAll('[aurelia-app]');
+    var appHost = doc.querySelectorAll('[aurelia-app],[data-aurelia-app]');
     return createLoader().then(function (loader) {
       return preparePlatform(loader).then(function () {
         for (var i = 0, ii = appHost.length; i < ii; ++i) {

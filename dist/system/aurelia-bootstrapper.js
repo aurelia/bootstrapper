@@ -86,7 +86,8 @@ System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], fun
   }
 
   function handleApp(loader, appHost) {
-    return config(loader, appHost, appHost.getAttribute('aurelia-app'));
+    var moduleId = appHost.getAttribute('aurelia-app') || appHost.getAttribute('data-aurelia-app');
+    return config(loader, appHost, moduleId);
   }
 
   function config(loader, appHost, configModuleId) {
@@ -111,7 +112,7 @@ System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], fun
     return ready(window).then(function (doc) {
       initialize();
 
-      var appHost = doc.querySelectorAll('[aurelia-app]');
+      var appHost = doc.querySelectorAll('[aurelia-app],[data-aurelia-app]');
       return createLoader().then(function (loader) {
         return preparePlatform(loader).then(function () {
           for (var i = 0, ii = appHost.length; i < ii; ++i) {
@@ -128,6 +129,15 @@ System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], fun
     });
   }
 
+  function bootstrap(configure) {
+    return onBootstrap(function (loader) {
+      var aurelia = new Aurelia(loader);
+      return configure(aurelia);
+    });
+  }
+
+  _export('bootstrap', bootstrap);
+
   return {
     setters: [function (_aureliaPolyfills) {}, function (_aureliaPal) {
       PLATFORM = _aureliaPal.PLATFORM;
@@ -138,15 +148,6 @@ System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], fun
       bootstrapQueue = [];
       sharedLoader = null;
       Aurelia = null;
-      function bootstrap(configure) {
-        return onBootstrap(function (loader) {
-          var aurelia = new Aurelia(loader);
-          return configure(aurelia);
-        });
-      }
-
-      _export('bootstrap', bootstrap);
-
       run();
     }
   };

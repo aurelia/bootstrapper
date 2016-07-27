@@ -5,7 +5,7 @@ define(['exports', './aurelia-bootstrapper'], function (exports, _aureliaBootstr
     value: true
   });
   Object.keys(_aureliaBootstrapper).forEach(function (key) {
-    if (key === "default") return;
+    if (key === "default" || key === "__esModule") return;
     Object.defineProperty(exports, key, {
       enumerable: true,
       get: function () {
