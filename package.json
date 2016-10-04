@@ -59,11 +59,7 @@
       "aurelia-templating-resources": "^1.0.0",
       "aurelia-templating-router": "^1.0.0"
     },
-    "devDependencies": {
-      "babel": "babel-core@^5.8.24",
-      "babel-runtime": "^5.8.24",
-      "core-js": "^2.0.3"
-    }
+    "devDependencies": {}
   },
   "dependencies": {
     "aurelia-event-aggregator": "^1.0.0",
