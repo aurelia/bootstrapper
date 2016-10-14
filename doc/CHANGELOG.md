@@ -1,3 +1,9 @@
+# [1.0.1]
+
+### Bug Fixes
+
+* **bootstrapper:** Check module function configure before execute it
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/aurelia/bootstrapper/compare/1.0.0-rc.1.0.1...v1.0.0) (2016-07-27)
 

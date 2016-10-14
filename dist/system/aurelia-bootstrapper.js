@@ -97,7 +97,11 @@ System.register(['aurelia-polyfills', 'aurelia-pal', 'aurelia-pal-browser'], fun
 
     if (configModuleId) {
       return loader.loadModule(configModuleId).then(function (customConfig) {
-        return customConfig.configure(aurelia);
+        if (!customConfig.configure) {
+          throw new Error("Cannot initialize module '" + configModuleId + "' without a configure function.");
+        }
+
+        customConfig.configure(aurelia);
       });
     }
 

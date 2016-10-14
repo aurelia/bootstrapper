@@ -1,6 +1,6 @@
 {
   "name": "aurelia-bootstrapper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sets up the default configuration for the aurelia framework and gets you up and running quick and easy.",
   "keywords": [
     "aurelia",
