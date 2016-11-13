@@ -22,19 +22,23 @@ function onBootstrap(callback) {
   });
 }
 
-function ready(global) {
+function ready() {
   return new Promise((resolve, reject) => {
-    if (global.document.readyState === 'complete') {
-      resolve(global.document);
+    if (typeof global !== 'undefined' && global.process) { /* is NodeJS */
+      return resolve(true);
+    }
+
+    if (window.document.readyState === 'complete') {
+      return resolve(false);
     } else {
-      global.document.addEventListener('DOMContentLoaded', completed);
-      global.addEventListener('load', completed);
+      window.document.addEventListener('DOMContentLoaded', completed);
+      window.addEventListener('load', completed);
     }
 
     function completed() {
-      global.document.removeEventListener('DOMContentLoaded', completed);
-      global.removeEventListener('load', completed);
-      resolve(global.document);
+      window.document.removeEventListener('DOMContentLoaded', completed);
+      window.removeEventListener('load', completed);
+      resolve(false);
     }
   });
 }
@@ -45,8 +49,8 @@ function createLoader() {
   }
 
   if (window.System && typeof window.System.import === 'function') {
-    return System.normalize('aurelia-bootstrapper').then(bootstrapperName => {
-      return System.normalize('aurelia-loader-default', bootstrapperName);
+    return window.System.normalize('aurelia-bootstrapper').then(bootstrapperName => {
+      return window.System.normalize('aurelia-loader-default', bootstrapperName);
     }).then(loaderName => {
       return window.System.import(loaderName).then(m => new m.DefaultLoader());
     });
@@ -106,8 +110,13 @@ function config(loader, appHost, configModuleId) {
 }
 
 function run() {
-  return ready(window).then(doc => {
-    initialize();
+  return ready().then((isNode: boolean) => {
+    if (!isNode) {
+      console.log(`initializing!`)
+      initialize();
+    }
+
+    const doc = PLATFORM.global.document;
 
     const appHost = doc.querySelectorAll('[aurelia-app],[data-aurelia-app]');
     return createLoader().then(loader => {
