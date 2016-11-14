@@ -112,7 +112,6 @@ function config(loader, appHost, configModuleId) {
 function run() {
   return ready().then((isNode: boolean) => {
     if (!isNode) {
-      console.log(`initializing!`)
       initialize();
     }
 
