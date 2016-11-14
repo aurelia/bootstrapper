@@ -22,19 +22,23 @@ function onBootstrap(callback) {
   });
 }
 
-function ready(global) {
+function ready() {
   return new Promise((resolve, reject) => {
-    if (global.document.readyState === 'complete') {
-      resolve(global.document);
+    if (typeof global !== 'undefined' && global.process) { /* is NodeJS */
+      return resolve(true);
+    }
+
+    if (window.document.readyState === 'complete') {
+      return resolve(false);
     } else {
-      global.document.addEventListener('DOMContentLoaded', completed);
-      global.addEventListener('load', completed);
+      window.document.addEventListener('DOMContentLoaded', completed);
+      window.addEventListener('load', completed);
     }
 
     function completed() {
-      global.document.removeEventListener('DOMContentLoaded', completed);
-      global.removeEventListener('load', completed);
-      resolve(global.document);
+      window.document.removeEventListener('DOMContentLoaded', completed);
+      window.removeEventListener('load', completed);
+      resolve(false);
     }
   });
 }
@@ -45,15 +49,15 @@ function createLoader() {
   }
 
   if (window.System && typeof window.System.import === 'function') {
-    return System.normalize('aurelia-bootstrapper').then(bootstrapperName => {
-      return System.normalize('aurelia-loader-default', bootstrapperName);
+    return window.System.normalize('aurelia-bootstrapper').then(bootstrapperName => {
+      return window.System.normalize('aurelia-loader-default', bootstrapperName);
     }).then(loaderName => {
-      return System.import(loaderName).then(m => new m.DefaultLoader());
+      return window.System.import(loaderName).then(m => new m.DefaultLoader());
     });
   }
 
   if (typeof window.require === 'function') {
-    return new Promise((resolve, reject) => require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
+    return new Promise((resolve, reject) => window.require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
   }
 
   return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
@@ -106,8 +110,12 @@ function config(loader, appHost, configModuleId) {
 }
 
 function run() {
-  return ready(window).then(doc => {
-    initialize();
+  return ready().then((isNode: boolean) => {
+    if (!isNode) {
+      initialize();
+    }
+
+    const doc = PLATFORM.global.document;
 
     const appHost = doc.querySelectorAll('[aurelia-app],[data-aurelia-app]');
     return createLoader().then(loader => {
@@ -138,4 +146,4 @@ export function bootstrap(configure: Function): Promise<void> {
   });
 }
 
-run();
+export const starting = run();

@@ -126,6 +126,17 @@
   "aurelia": {
     "documentation": {
       "articles": []
+    },
+    "build": {
+      "resources": [
+        "aurelia-framework",
+        "aurelia-logging-console",
+        "aurelia-templating-binding",
+        "aurelia-templating-resources",
+        "aurelia-templating-router",
+        "aurelia-history-browser",
+        "aurelia-event-aggregator"
+      ]
     }
   }
 }
