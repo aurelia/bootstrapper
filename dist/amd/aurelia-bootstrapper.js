@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-pal', 'aurelia-pal-browser', 'aurelia-polyfills'], function (exports, _aureliaPal, _aureliaPalBrowser) {
+define(['exports', 'aurelia-pal', 'aurelia-polyfills'], function (exports, _aureliaPal) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -10,6 +10,8 @@ define(['exports', 'aurelia-pal', 'aurelia-pal-browser', 'aurelia-polyfills'], f
   var bootstrapQueue = [];
   var sharedLoader = null;
   var Aurelia = null;
+  var host = _aureliaPal.PLATFORM.global;
+  var bootstrapperName = void 0;
 
   function onBootstrap(callback) {
     return new Promise(function (resolve, reject) {
@@ -27,19 +29,19 @@ define(['exports', 'aurelia-pal', 'aurelia-pal-browser', 'aurelia-polyfills'], f
     });
   }
 
-  function ready(global) {
+  function ready() {
     return new Promise(function (resolve, reject) {
-      if (global.document.readyState === 'complete') {
-        resolve(global.document);
+      if (host.document.readyState === 'complete') {
+        resolve();
       } else {
-        global.document.addEventListener('DOMContentLoaded', completed);
-        global.addEventListener('load', completed);
+        host.document.addEventListener('DOMContentLoaded', completed);
+        host.addEventListener('load', completed);
       }
 
       function completed() {
-        global.document.removeEventListener('DOMContentLoaded', completed);
-        global.removeEventListener('load', completed);
-        resolve(global.document);
+        host.document.removeEventListener('DOMContentLoaded', completed);
+        host.removeEventListener('load', completed);
+        resolve();
       }
     });
   }
@@ -49,17 +51,17 @@ define(['exports', 'aurelia-pal', 'aurelia-pal-browser', 'aurelia-polyfills'], f
       return Promise.resolve(new _aureliaPal.PLATFORM.Loader());
     }
 
-    if (window.System && typeof window.System.import === 'function') {
-      return System.normalize('aurelia-bootstrapper').then(function (bootstrapperName) {
-        return System.normalize('aurelia-loader-default', bootstrapperName);
+    if (host.System && typeof host.System.import === 'function') {
+      return host.System.normalize('aurelia-bootstrapper').then(function (bsn) {
+        return host.System.normalize('aurelia-loader-default', bsn);
       }).then(function (loaderName) {
-        return System.import(loaderName).then(function (m) {
+        return host.System.import(loaderName).then(function (m) {
           return new m.DefaultLoader();
         });
       });
     }
 
-    if (typeof window.require === 'function') {
+    if (typeof host.require === 'function') {
       return new Promise(function (resolve, reject) {
         return require(['aurelia-loader-default'], function (m) {
           return resolve(new m.DefaultLoader());
@@ -70,8 +72,31 @@ define(['exports', 'aurelia-pal', 'aurelia-pal-browser', 'aurelia-polyfills'], f
     return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
   }
 
+  function getPalImplementationName() {
+    if (!_aureliaPal.PLATFORM.implementation) {
+      if (typeof window !== 'undefined') {
+        _aureliaPal.PLATFORM.implementation = 'aurelia-pal-browser';
+      } else if (typeof self !== 'undefined') {
+        _aureliaPal.PLATFORM.implementation = 'aurelia-pal-worker';
+      } else if (typeof global !== 'undefined') {
+        _aureliaPal.PLATFORM.implementation = 'aurelia-pal-nodejs';
+      } else {
+        throw new Error('Could not determine platform implementation to load.');
+      }
+    }
+
+    return _aureliaPal.PLATFORM.implementation;
+  }
+
   function preparePlatform(loader) {
-    return loader.normalize('aurelia-bootstrapper').then(function (bootstrapperName) {
+    return loader.normalize('aurelia-bootstrapper').then(function (bsn) {
+      bootstrapperName = bsn;
+      return loader.normalize(getPalImplementationName(), bsn);
+    }).then(function (palName) {
+      return loader.loadModule(palName);
+    }).then(function (palModule) {
+      palModule.initialize();
+
       return loader.normalize('aurelia-framework', bootstrapperName).then(function (frameworkName) {
         loader.map('aurelia-framework', frameworkName);
 
@@ -118,22 +143,22 @@ define(['exports', 'aurelia-pal', 'aurelia-pal-browser', 'aurelia-polyfills'], f
   }
 
   function run() {
-    return ready(window).then(function (doc) {
-      (0, _aureliaPalBrowser.initialize)();
+    return ready().then(function () {
+      return createLoader();
+    }).then(function (loader) {
+      return preparePlatform(loader).then(function () {
+        var appHost = host.document.querySelectorAll('[aurelia-app],[data-aurelia-app]');
+        var toConsole = console.error.bind(console);
 
-      var appHost = doc.querySelectorAll('[aurelia-app],[data-aurelia-app]');
-      return createLoader().then(function (loader) {
-        return preparePlatform(loader).then(function () {
-          for (var i = 0, ii = appHost.length; i < ii; ++i) {
-            handleApp(loader, appHost[i]).catch(console.error.bind(console));
-          }
+        for (var i = 0, ii = appHost.length; i < ii; ++i) {
+          handleApp(loader, appHost[i]).catch(toConsole);
+        }
 
-          sharedLoader = loader;
-          for (var _i = 0, _ii = bootstrapQueue.length; _i < _ii; ++_i) {
-            bootstrapQueue[_i]();
-          }
-          bootstrapQueue = null;
-        });
+        sharedLoader = loader;
+        for (var _i = 0, _ii = bootstrapQueue.length; _i < _ii; ++_i) {
+          bootstrapQueue[_i]();
+        }
+        bootstrapQueue = null;
       });
     });
   }
