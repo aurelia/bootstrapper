@@ -164,4 +164,8 @@ export function bootstrap(configure: Function): Promise<void> {
   });
 }
 
-run();
+/**
+ * A promise that represents the bootstrapper's startup process.
+ * It resolves when the process has finished starting.
+ */
+export const starting = run();
