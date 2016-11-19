@@ -5,7 +5,6 @@ let bootstrapQueue = [];
 let sharedLoader = null;
 let Aurelia = null;
 let host = PLATFORM.global;
-let bootstrapperName;
 
 function onBootstrap(callback) {
   return new Promise((resolve, reject) => {
@@ -80,35 +79,27 @@ function createLoader() {
   return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
 }
 
-function getPalImplementationName() {
-  if (!PLATFORM.implementation) {
-    if (typeof window !== 'undefined') {
-      // Web Browser Support
-      PLATFORM.implementation = 'aurelia-pal-browser';
-    } else if (typeof self !== 'undefined') {
-      // Web Worker Support
-      PLATFORM.implementation = 'aurelia-pal-worker';
-    } else if (typeof global !== 'undefined') {
-      // Node.js Support
-      PLATFORM.implementation = 'aurelia-pal-nodejs';
-    } else {
-      throw new Error('Could not determine platform implementation to load.');
-    }
+function initializePal(loader) {
+  let type;
+
+  if (typeof window !== 'undefined') {
+    type = 'browser';
+  } else if (typeof self !== 'undefined') {
+    type = 'worker';
+  } else if (typeof global !== 'undefined') {
+    type = 'nodejs';
+  } else {
+    throw new Error('Could not determine platform implementation to load.');
   }
 
-  return PLATFORM.implementation;
+  return loader.loadModule('aurelia-pal-' + type)
+    .then(palModule => palModule.initialize());
 }
 
 function preparePlatform(loader) {
-  return loader.normalize('aurelia-bootstrapper')
-    .then(bsn => {
-      bootstrapperName = bsn;
-      return loader.normalize(getPalImplementationName(), bsn);
-    })
-    .then(palName => loader.loadModule(palName))
-    .then(palModule => {
-      palModule.initialize();
-
+  return initializePal(loader)
+    .then(() => loader.normalize('aurelia-bootstrapper'))
+    .then(bootstrapperName => {
       return loader.normalize('aurelia-framework', bootstrapperName)
         .then(frameworkName => {
           loader.map('aurelia-framework', frameworkName);
