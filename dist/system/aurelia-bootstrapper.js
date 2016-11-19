@@ -3,7 +3,7 @@
 System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _context) {
   "use strict";
 
-  var PLATFORM, bootstrapQueue, sharedLoader, Aurelia, host, bootstrapperName;
+  var PLATFORM, bootstrapQueue, sharedLoader, Aurelia, host, starting;
 
 
   function onBootstrap(callback) {
@@ -44,6 +44,11 @@ System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _contex
       return Promise.resolve(new PLATFORM.Loader());
     }
 
+    if (typeof __webpack_require__ !== 'undefined') {
+      var loaderModule = require('aurelia-loader-webpack');
+      return Promise.resolve(new loaderModule.WebpackLoader());
+    }
+
     if (host.System && typeof host.System.import === 'function') {
       return host.System.normalize('aurelia-bootstrapper').then(function (bsn) {
         return host.System.normalize('aurelia-loader-default', bsn);
@@ -52,6 +57,11 @@ System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _contex
           return new m.DefaultLoader();
         });
       });
+    }
+
+    if (typeof global !== 'undefined' && typeof global.require !== 'undefined') {
+      var _loaderModule = global.require('aurelia-loader-nodejs');
+      return Promise.resolve(new _loaderModule.NodeJsLoader());
     }
 
     if (typeof host.require === 'function') {
@@ -65,31 +75,28 @@ System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _contex
     return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
   }
 
-  function getPalImplementationName() {
-    if (!PLATFORM.implementation) {
-      if (typeof window !== 'undefined') {
-        PLATFORM.implementation = 'aurelia-pal-browser';
-      } else if (typeof self !== 'undefined') {
-        PLATFORM.implementation = 'aurelia-pal-worker';
-      } else if (typeof global !== 'undefined') {
-        PLATFORM.implementation = 'aurelia-pal-nodejs';
-      } else {
-        throw new Error('Could not determine platform implementation to load.');
-      }
+  function initializePal(loader) {
+    var type = void 0;
+
+    if (typeof window !== 'undefined') {
+      type = 'browser';
+    } else if (typeof self !== 'undefined') {
+      type = 'worker';
+    } else if (typeof global !== 'undefined') {
+      type = 'nodejs';
+    } else {
+      throw new Error('Could not determine platform implementation to load.');
     }
 
-    return PLATFORM.implementation;
+    return loader.loadModule('aurelia-pal-' + type).then(function (palModule) {
+      return palModule.initialize();
+    });
   }
 
   function preparePlatform(loader) {
-    return loader.normalize('aurelia-bootstrapper').then(function (bsn) {
-      bootstrapperName = bsn;
-      return loader.normalize(getPalImplementationName(), bsn);
-    }).then(function (palName) {
-      return loader.loadModule(palName);
-    }).then(function (palModule) {
-      palModule.initialize();
-
+    return initializePal(loader).then(function () {
+      return loader.normalize('aurelia-bootstrapper');
+    }).then(function (bootstrapperName) {
       return loader.normalize('aurelia-framework', bootstrapperName).then(function (frameworkName) {
         loader.map('aurelia-framework', frameworkName);
 
@@ -174,8 +181,10 @@ System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _contex
       sharedLoader = null;
       Aurelia = null;
       host = PLATFORM.global;
-      bootstrapperName = void 0;
-      run();
+
+      _export('starting', starting = run());
+
+      _export('starting', starting);
     }
   };
 });

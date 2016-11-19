@@ -5,7 +5,6 @@ let bootstrapQueue = [];
 let sharedLoader = null;
 let Aurelia = null;
 let host = PLATFORM.global;
-let bootstrapperName;
 
 function onBootstrap(callback) {
   return new Promise((resolve, reject) => {
@@ -41,10 +40,19 @@ function ready() {
 }
 
 function createLoader() {
+  // Custom Loader Support
   if (PLATFORM.Loader) {
     return Promise.resolve(new PLATFORM.Loader());
   }
 
+  // Webpack Loader Support
+  if (typeof __webpack_require__ !== 'undefined') {
+    /* note: Webpack needs the require to be top level to parse the request */
+    const loaderModule = require('aurelia-loader-webpack');
+    return Promise.resolve(new loaderModule.WebpackLoader());
+  }
+
+  // SystemJS Loader Support
   if (host.System && typeof host.System.import === 'function') {
     return host.System.normalize('aurelia-bootstrapper').then(bsn => {
       return host.System.normalize('aurelia-loader-default', bsn);
@@ -53,6 +61,17 @@ function createLoader() {
     });
   }
 
+  // Node.js Support
+  if (typeof global !== 'undefined' && typeof global.require !== 'undefined') {
+    /* note: we use a scoped global.require() instead of simply require()
+     * so that Webpack does not automatically include this loader as a dependency,
+     * similarly to the non-global call to System.import() before
+     */
+    const loaderModule = global.require('aurelia-loader-nodejs');
+    return Promise.resolve(new loaderModule.NodeJsLoader());
+  }
+
+  // AMD Module Loader Support
   if (typeof host.require === 'function') {
     return new Promise((resolve, reject) => require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
   }
@@ -60,32 +79,27 @@ function createLoader() {
   return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
 }
 
-function getPalImplementationName() {
-  if (!PLATFORM.implementation) {
-    if (typeof window !== 'undefined') {
-      PLATFORM.implementation = 'aurelia-pal-browser';
-    } else if (typeof self !== 'undefined') {
-      PLATFORM.implementation = 'aurelia-pal-worker';
-    } else if (typeof global !== 'undefined') {
-      PLATFORM.implementation = 'aurelia-pal-nodejs';
-    } else {
-      throw new Error('Could not determine platform implementation to load.');
-    }
+function initializePal(loader) {
+  let type;
+
+  if (typeof window !== 'undefined') {
+    type = 'browser';
+  } else if (typeof self !== 'undefined') {
+    type = 'worker';
+  } else if (typeof global !== 'undefined') {
+    type = 'nodejs';
+  } else {
+    throw new Error('Could not determine platform implementation to load.');
   }
 
-  return PLATFORM.implementation;
+  return loader.loadModule('aurelia-pal-' + type)
+    .then(palModule => palModule.initialize());
 }
 
 function preparePlatform(loader) {
-  return loader.normalize('aurelia-bootstrapper')
-    .then(bsn => {
-      bootstrapperName = bsn;
-      return loader.normalize(getPalImplementationName(), bsn);
-    })
-    .then(palName => loader.loadModule(palName))
-    .then(palModule => {
-      palModule.initialize();
-
+  return initializePal(loader)
+    .then(() => loader.normalize('aurelia-bootstrapper'))
+    .then(bootstrapperName => {
       return loader.normalize('aurelia-framework', bootstrapperName)
         .then(frameworkName => {
           loader.map('aurelia-framework', frameworkName);
@@ -164,4 +178,8 @@ export function bootstrap(configure: Function): Promise<void> {
   });
 }
 
-run();
+/**
+ * A promise that represents the bootstrapper's startup process.
+ * It resolves when the process has finished starting.
+ */
+export const starting = run();

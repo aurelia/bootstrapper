@@ -9,3 +9,9 @@ import {
  * @return A Promise that completes when configuration is done.
  */
 export declare function bootstrap(configure: Function): Promise<void>;
+
+/**
+ * A promise that represents the bootstrapper's startup process.
+ * It resolves when the process has finished starting.
+ */
+export declare const starting: any;
