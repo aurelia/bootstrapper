@@ -45,7 +45,7 @@ function createLoader() {
   }
 
   if (typeof __webpack_require__ !== 'undefined') {
-    const loaderModule = require('aurelia-loader-webpack');
+    const loaderModule = __webpack_require__(require.resolve('aurelia-loader-webpack'));
     return Promise.resolve(new loaderModule.WebpackLoader());
   }
 
@@ -63,7 +63,7 @@ function createLoader() {
   }
 
   if (typeof host.require === 'function') {
-    return new Promise((resolve, reject) => require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
+    return new Promise((resolve, reject) => host.require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
   }
 
   return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');

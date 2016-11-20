@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-pal', 'aurelia-loader-webpack', 'aurelia-polyfills'], function (exports, _aureliaPal, loaderModule) {
+define(['exports', 'aurelia-pal', 'aurelia-polyfills'], function (exports, _aureliaPal) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -52,6 +52,7 @@ define(['exports', 'aurelia-pal', 'aurelia-loader-webpack', 'aurelia-polyfills']
     }
 
     if (typeof __webpack_require__ !== 'undefined') {
+      var loaderModule = __webpack_require__(require.resolve('aurelia-loader-webpack'));
       return Promise.resolve(new loaderModule.WebpackLoader());
     }
 
@@ -72,7 +73,7 @@ define(['exports', 'aurelia-pal', 'aurelia-loader-webpack', 'aurelia-polyfills']
 
     if (typeof host.require === 'function') {
       return new Promise(function (resolve, reject) {
-        return require(['aurelia-loader-default'], function (m) {
+        return host.require(['aurelia-loader-default'], function (m) {
           return resolve(new m.DefaultLoader());
         }, reject);
       });

@@ -40,8 +40,7 @@ module.exports = function(config) {
         plugins: [
           'syntax-flow',
           'transform-decorators-legacy',
-          'transform-flow-strip-types',
-          'transform-es2015-modules-systemjs'
+          'transform-flow-strip-types'
         ]
       }
     },

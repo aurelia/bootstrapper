@@ -45,7 +45,7 @@ System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _contex
     }
 
     if (typeof __webpack_require__ !== 'undefined') {
-      var loaderModule = require('aurelia-loader-webpack');
+      var loaderModule = __webpack_require__(require.resolve('aurelia-loader-webpack'));
       return Promise.resolve(new loaderModule.WebpackLoader());
     }
 
@@ -66,7 +66,7 @@ System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _contex
 
     if (typeof host.require === 'function') {
       return new Promise(function (resolve, reject) {
-        return require(['aurelia-loader-default'], function (m) {
+        return host.require(['aurelia-loader-default'], function (m) {
           return resolve(new m.DefaultLoader());
         }, reject);
       });

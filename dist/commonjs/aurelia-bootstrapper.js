@@ -54,7 +54,7 @@ function createLoader() {
   }
 
   if (typeof __webpack_require__ !== 'undefined') {
-    var loaderModule = require('aurelia-loader-webpack');
+    var loaderModule = __webpack_require__(require.resolve('aurelia-loader-webpack'));
     return Promise.resolve(new loaderModule.WebpackLoader());
   }
 
@@ -75,7 +75,7 @@ function createLoader() {
 
   if (typeof host.require === 'function') {
     return new Promise(function (resolve, reject) {
-      return require(['aurelia-loader-default'], function (m) {
+      return host.require(['aurelia-loader-default'], function (m) {
         return resolve(new m.DefaultLoader());
       }, reject);
     });
