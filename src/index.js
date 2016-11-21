@@ -4,7 +4,7 @@ import {PLATFORM} from 'aurelia-pal';
 let bootstrapQueue = [];
 let sharedLoader = null;
 let Aurelia = null;
-let host = PLATFORM.global;
+const host = PLATFORM.global;
 
 function onBootstrap(callback) {
   return new Promise((resolve, reject) => {
