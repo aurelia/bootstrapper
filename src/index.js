@@ -1,10 +1,11 @@
 import 'aurelia-polyfills';
-import {PLATFORM} from 'aurelia-pal';
+import {PLATFORM, isInitialized} from 'aurelia-pal';
 
 let bootstrapQueue = [];
 let sharedLoader = null;
 let Aurelia = null;
 const host = PLATFORM.global;
+const isNodeLike = typeof process !== 'undefined';
 
 function onBootstrap(callback) {
   return new Promise((resolve, reject) => {
@@ -84,18 +85,20 @@ function createLoader() {
 function initializePal(loader) {
   let type;
 
-  if (typeof window !== 'undefined') {
+  const isElectronRenderer = isNodeLike && process.type === 'renderer';
+
+  if (isNodeLike && !isElectronRenderer) {
+    type = 'nodejs';
+  } else if (typeof window !== 'undefined') {
     type = 'browser';
   } else if (typeof self !== 'undefined') {
     type = 'worker';
-  } else if (typeof global !== 'undefined') {
-    type = 'nodejs';
   } else {
     throw new Error('Could not determine platform implementation to load.');
   }
 
   return loader.loadModule('aurelia-pal-' + type)
-    .then(palModule => palModule.initialize());
+    .then(palModule => type === 'nodejs' && !isInitialized && palModule.globalize() || palModule.initialize());
 }
 
 function preparePlatform(loader) {
