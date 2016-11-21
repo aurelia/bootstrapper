@@ -24,7 +24,7 @@ function onBootstrap(callback) {
 
 function ready() {
   return new Promise((resolve, reject) => {
-    if (host.document.readyState === 'complete') {
+    if (!host.document || host.document.readyState === 'complete') {
       resolve();
     } else {
       host.document.addEventListener('DOMContentLoaded', completed);
