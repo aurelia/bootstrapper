@@ -55,7 +55,7 @@ function createLoader() {
   }
 
   // SystemJS Loader Support
-  if (host.System && typeof host.System.import === 'function') {
+  if (host.System && typeof host.System.config === 'function') {
     return host.System.normalize('aurelia-bootstrapper').then(bsn => {
       return host.System.normalize('aurelia-loader-default', bsn);
     }).then(loaderName => {
@@ -64,7 +64,7 @@ function createLoader() {
   }
 
   // AMD Module Loader Support
-  if (typeof host.require === 'function') {
+  if (typeof host.require === 'function' && typeof host.require.version === 'string') {
     return new Promise((resolve, reject) => host.require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
   }
 
