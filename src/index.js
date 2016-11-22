@@ -70,12 +70,11 @@ function createLoader() {
   }
 
   // Node.js and Electron Support
-  if (isNodeLike && typeof require !== 'undefined') {
-    // note: we use a scoped r = require() instead of simply require()
+  if (isNodeLike && typeof module !== 'undefined' && typeof module.require !== 'undefined') {
+    // note: we use a scoped module.require() instead of simply require()
     // so that Webpack's parser does not automatically include this loader as a dependency,
     // similarly to the non-global call to System.import() above
-    const r = require;
-    const m = r('aurelia-loader-nodejs');
+    const m = module.require('aurelia-loader-nodejs');
     return Promise.resolve(new m.NodeJsLoader());
   }
 
