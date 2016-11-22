@@ -5,7 +5,7 @@ let bootstrapQueue = [];
 let sharedLoader = null;
 let Aurelia = null;
 const host = PLATFORM.global;
-const isNodeLike = typeof process !== 'undefined';
+const isNodeLike = typeof process !== 'undefined' && !process.browser;
 
 function onBootstrap(callback) {
   return new Promise((resolve, reject) => {
