@@ -14,6 +14,7 @@ var bootstrapQueue = [];
 var sharedLoader = null;
 var Aurelia = null;
 var host = _aureliaPal.PLATFORM.global;
+var isNodeLike = typeof process !== 'undefined' && !process.browser;
 
 function onBootstrap(callback) {
   return new Promise(function (resolve, reject) {
@@ -33,7 +34,7 @@ function onBootstrap(callback) {
 
 function ready() {
   return new Promise(function (resolve, reject) {
-    if (host.document.readyState === 'complete') {
+    if (!host.document || host.document.readyState === 'complete') {
       resolve();
     } else {
       host.document.addEventListener('DOMContentLoaded', completed);
@@ -54,11 +55,11 @@ function createLoader() {
   }
 
   if (typeof __webpack_require__ !== 'undefined') {
-    var loaderModule = __webpack_require__(require.resolve('aurelia-loader-webpack'));
-    return Promise.resolve(new loaderModule.WebpackLoader());
+    var m = __webpack_require__(require.resolve('aurelia-loader-webpack'));
+    return Promise.resolve(new m.WebpackLoader());
   }
 
-  if (host.System && typeof host.System.import === 'function') {
+  if (host.System && typeof host.System.config === 'function') {
     return host.System.normalize('aurelia-bootstrapper').then(function (bsn) {
       return host.System.normalize('aurelia-loader-default', bsn);
     }).then(function (loaderName) {
@@ -68,17 +69,17 @@ function createLoader() {
     });
   }
 
-  if (typeof global !== 'undefined' && typeof global.require !== 'undefined') {
-    var _loaderModule = global.require('aurelia-loader-nodejs');
-    return Promise.resolve(new _loaderModule.NodeJsLoader());
-  }
-
-  if (typeof host.require === 'function') {
+  if (typeof host.require === 'function' && typeof host.require.version === 'string') {
     return new Promise(function (resolve, reject) {
       return host.require(['aurelia-loader-default'], function (m) {
         return resolve(new m.DefaultLoader());
       }, reject);
     });
+  }
+
+  if (isNodeLike && typeof module !== 'undefined' && typeof module.require !== 'undefined') {
+    var _m = module.require('aurelia-loader-nodejs');
+    return Promise.resolve(new _m.NodeJsLoader());
   }
 
   return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
@@ -87,18 +88,20 @@ function createLoader() {
 function initializePal(loader) {
   var type = void 0;
 
-  if (typeof window !== 'undefined') {
+  var isElectronRenderer = isNodeLike && process.type === 'renderer';
+
+  if (isNodeLike && !isElectronRenderer) {
+    type = 'nodejs';
+  } else if (typeof window !== 'undefined') {
     type = 'browser';
   } else if (typeof self !== 'undefined') {
     type = 'worker';
-  } else if (typeof global !== 'undefined') {
-    type = 'nodejs';
   } else {
     throw new Error('Could not determine platform implementation to load.');
   }
 
   return loader.loadModule('aurelia-pal-' + type).then(function (palModule) {
-    return palModule.initialize();
+    return type === 'nodejs' && !_aureliaPal.isInitialized && palModule.globalize() || palModule.initialize();
   });
 }
 

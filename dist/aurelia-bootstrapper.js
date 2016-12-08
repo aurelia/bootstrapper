@@ -1,10 +1,11 @@
 import 'aurelia-polyfills';
-import {PLATFORM} from 'aurelia-pal';
+import {PLATFORM,isInitialized} from 'aurelia-pal';
 
 let bootstrapQueue = [];
 let sharedLoader = null;
 let Aurelia = null;
-let host = PLATFORM.global;
+const host = PLATFORM.global;
+const isNodeLike = typeof process !== 'undefined' && !process.browser;
 
 function onBootstrap(callback) {
   return new Promise((resolve, reject) => {
@@ -24,7 +25,7 @@ function onBootstrap(callback) {
 
 function ready() {
   return new Promise((resolve, reject) => {
-    if (host.document.readyState === 'complete') {
+    if (!host.document || host.document.readyState === 'complete') {
       resolve();
     } else {
       host.document.addEventListener('DOMContentLoaded', completed);
@@ -50,12 +51,12 @@ function createLoader() {
     // Webpack needs the require to be top level to parse the request.
     // However, we don't want to use require or that will cause the Babel
     // transpiler to detect an incorrect dependency.
-    const loaderModule = __webpack_require__(require.resolve('aurelia-loader-webpack'));
-    return Promise.resolve(new loaderModule.WebpackLoader());
+    const m = __webpack_require__(require.resolve('aurelia-loader-webpack'));
+    return Promise.resolve(new m.WebpackLoader());
   }
 
   // SystemJS Loader Support
-  if (host.System && typeof host.System.import === 'function') {
+  if (host.System && typeof host.System.config === 'function') {
     return host.System.normalize('aurelia-bootstrapper').then(bsn => {
       return host.System.normalize('aurelia-loader-default', bsn);
     }).then(loaderName => {
@@ -63,19 +64,18 @@ function createLoader() {
     });
   }
 
-  // Node.js Support
-  if (typeof global !== 'undefined' && typeof global.require !== 'undefined') {
-    /* note: we use a scoped global.require() instead of simply require()
-     * so that Webpack does not automatically include this loader as a dependency,
-     * similarly to the non-global call to System.import() before
-     */
-    const loaderModule = global.require('aurelia-loader-nodejs');
-    return Promise.resolve(new loaderModule.NodeJsLoader());
+  // AMD Module Loader Support
+  if (typeof host.require === 'function' && typeof host.require.version === 'string') {
+    return new Promise((resolve, reject) => host.require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
   }
 
-  // AMD Module Loader Support
-  if (typeof host.require === 'function') {
-    return new Promise((resolve, reject) => host.require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
+  // Node.js and Electron Support
+  if (isNodeLike && typeof module !== 'undefined' && typeof module.require !== 'undefined') {
+    // note: we use a scoped module.require() instead of simply require()
+    // so that Webpack's parser does not automatically include this loader as a dependency,
+    // similarly to the non-global call to System.import() above
+    const m = module.require('aurelia-loader-nodejs');
+    return Promise.resolve(new m.NodeJsLoader());
   }
 
   return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
@@ -84,18 +84,20 @@ function createLoader() {
 function initializePal(loader) {
   let type;
 
-  if (typeof window !== 'undefined') {
+  const isElectronRenderer = isNodeLike && process.type === 'renderer';
+
+  if (isNodeLike && !isElectronRenderer) {
+    type = 'nodejs';
+  } else if (typeof window !== 'undefined') {
     type = 'browser';
   } else if (typeof self !== 'undefined') {
     type = 'worker';
-  } else if (typeof global !== 'undefined') {
-    type = 'nodejs';
   } else {
     throw new Error('Could not determine platform implementation to load.');
   }
 
   return loader.loadModule('aurelia-pal-' + type)
-    .then(palModule => palModule.initialize());
+    .then(palModule => type === 'nodejs' && !isInitialized && palModule.globalize() || palModule.initialize());
 }
 
 function preparePlatform(loader) {

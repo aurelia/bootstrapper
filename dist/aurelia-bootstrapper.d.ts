@@ -1,6 +1,7 @@
 import 'aurelia-polyfills';
 import {
-  PLATFORM
+  PLATFORM,
+  isInitialized
 } from 'aurelia-pal';
 
 /**

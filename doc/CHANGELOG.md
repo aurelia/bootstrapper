@@ -1,3 +1,25 @@
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/aurelia/bootstrapper/compare/1.0.1...v2.0.0) (2016-12-08)
+
+
+### Bug Fixes
+
+* **index:** do not fail when process is polyfilled by Webpack ([7ba0654](https://github.com/aurelia/bootstrapper/commit/7ba0654))
+* **index:** do not trip up on NodeJS if PAL was previously initialized ([c70321d](https://github.com/aurelia/bootstrapper/commit/c70321d))
+* **index:** higher quality checks for SystemJS and AMD ([71a91f2](https://github.com/aurelia/bootstrapper/commit/71a91f2))
+* **index:** ready when no document (not initialized on NodeJS) ([44b0e55](https://github.com/aurelia/bootstrapper/commit/44b0e55))
+* **index:** use module.require for node to trip up webpack's parser ([46830fa](https://github.com/aurelia/bootstrapper/commit/46830fa))
+* **index:** use webpack require to hide from amd ([cdaa0f2](https://github.com/aurelia/bootstrapper/commit/cdaa0f2))
+
+
+### Features
+
+* **all:** rework the bootstrapper to detect and load the proper pal ([8ba596b](https://github.com/aurelia/bootstrapper/commit/8ba596b))
+* **index:** add starting promise export ([1844827](https://github.com/aurelia/bootstrapper/commit/1844827))
+* **index:** add support for module loader detection ([438ffde](https://github.com/aurelia/bootstrapper/commit/438ffde))
+
+
+
 # [1.0.1]
 
 ### Bug Fixes
