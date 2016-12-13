@@ -5,7 +5,7 @@ let bootstrapQueue = [];
 let sharedLoader = null;
 let Aurelia = null;
 const host = PLATFORM.global;
-const isNodeLike = typeof process !== 'undefined' && !process.browser && !process.versions['nw'];
+const isNodeLike = typeof process !== 'undefined' && !process.browser;
 
 function onBootstrap(callback) {
   return new Promise((resolve, reject) => {
@@ -84,9 +84,9 @@ function createLoader() {
 function initializePal(loader) {
   let type;
 
-  const isElectronRenderer = isNodeLike && process.type === 'renderer';
+  var isRenderer = isNodeLike && (process.type === 'renderer' || process.versions['node-webkit']);
 
-  if (isNodeLike && !isElectronRenderer) {
+  if (isNodeLike && !isRenderer) {
     type = 'nodejs';
   } else if (typeof window !== 'undefined') {
     type = 'browser';
