@@ -78,9 +78,9 @@ System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _contex
   function initializePal(loader) {
     var type = void 0;
 
-    var isElectronRenderer = isNodeLike && process.type === 'renderer';
+    var isRenderer = isNodeLike && (process.type === 'renderer' || process.versions['node-webkit']);
 
-    if (isNodeLike && !isElectronRenderer) {
+    if (isNodeLike && !isRenderer) {
       type = 'nodejs';
     } else if (typeof window !== 'undefined') {
       type = 'browser';
