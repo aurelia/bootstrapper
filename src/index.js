@@ -41,6 +41,13 @@ function ready() {
 }
 
 function createLoader() {
+  // Note: Please do NOT add any PLATFORM.moduleName annotation in this method,
+  //       for example around 'aurelia-loader-webpack'.
+  //       Each import has been carefully written so that it is picked up by 
+  //       its respective bundler and is ignored by others.
+  //       Adding moduleName() would add a static dependency, which we don't 
+  //       want as the correct loader is determined at build time.
+
   // Custom Loader Support
   if (PLATFORM.Loader) {
     return Promise.resolve(new PLATFORM.Loader());
@@ -96,15 +103,28 @@ function initializePal(loader) {
     throw new Error('Could not determine platform implementation to load.');
   }
 
+  // Note: Please do NOT try to add PLATFORM.moduleName() annotations here.
+  //       This would create a static dependency between bootstrapper and a PAL, which we don't want.
+  //       The correct PAL to bundle must be determined by the bundling tool at build time.
+
   return loader.loadModule('aurelia-pal-' + type)
     .then(palModule => type === 'nodejs' && !isInitialized && palModule.globalize() || palModule.initialize());
 }
 
 function preparePlatform(loader) {
+  // Note: Please do NOT add PLATFORM.moduleName() others than 'aurelia-framework'.
+  //       This is the _only_ module actually loaded by the bootstrapper.
+  //       The other ones are fake dependencies, if you look at the code carefully you'll 
+  //       notice that they are just some name resolutions and mapping; nothing gets loaded.
+
   return initializePal(loader)
     .then(() => loader.normalize('aurelia-bootstrapper'))
     .then(bootstrapperName => {
-      return loader.normalize('aurelia-framework', bootstrapperName)
+      // aurelia-framework re-exports pretty much everything.
+      // As can be seen at the end of this method, the only field accessed by bootstrapper is `Aurelia`,
+      // so we document that to enable tree shaking on all other exported members.
+      return loader.normalize(PLATFORM.moduleName('aurelia-framework', { exports: ['Aurelia'] }),
+                              bootstrapperName)
         .then(frameworkName => {
           loader.map('aurelia-framework', frameworkName);
 
