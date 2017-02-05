@@ -1,36 +1,21 @@
 import 'aurelia-polyfills';
 import {PLATFORM, isInitialized} from 'aurelia-pal';
 
-let bootstrapQueue = [];
-let sharedLoader = null;
-let Aurelia = null;
+let bootstrapPromises = [];
+let startResolve;
+const startPromise = new Promise(resolve => startResolve = resolve);
+
 const host = PLATFORM.global;
 const isNodeLike = typeof process !== 'undefined' && !process.browser;
 
-function onBootstrap(callback) {
-  return new Promise((resolve, reject) => {
-    if (sharedLoader) {
-      resolve(callback(sharedLoader));
-    } else {
-      bootstrapQueue.push(() => {
-        try {
-          resolve(callback(sharedLoader));
-        } catch (e) {
-          reject(e);
-        }
-      });
-    }
-  });
-}
 
 function ready() {
-  return new Promise((resolve, reject) => {
-    if (!host.document || host.document.readyState === 'complete') {
-      resolve();
-    } else {
-      host.document.addEventListener('DOMContentLoaded', completed);
-      host.addEventListener('load', completed);
-    }
+  if (!host.document || host.document.readyState === 'complete') {
+    return Promise.resolve();
+  }
+  return new Promise(resolve => {
+    host.document.addEventListener('DOMContentLoaded', completed);
+    host.addEventListener('load', completed);
 
     function completed() {
       host.document.removeEventListener('DOMContentLoaded', completed);
@@ -41,6 +26,13 @@ function ready() {
 }
 
 function createLoader() {
+  // Note: Please do NOT add any PLATFORM.moduleName annotation in this method,
+  //       for example around 'aurelia-loader-webpack'.
+  //       Each import has been carefully written so that it is picked up by 
+  //       its respective bundler and is ignored by others.
+  //       Adding moduleName() would add a static dependency, which we don't 
+  //       want as the correct loader is determined at build time.
+
   // Custom Loader Support
   if (PLATFORM.Loader) {
     return Promise.resolve(new PLATFORM.Loader());
@@ -96,77 +88,83 @@ function initializePal(loader) {
     throw new Error('Could not determine platform implementation to load.');
   }
 
+  // Note: Please do NOT try to add PLATFORM.moduleName() annotations here.
+  //       This would create a static dependency between bootstrapper and a PAL, which we don't want.
+  //       The correct PAL to bundle must be determined by the bundling tool at build time.
   return loader.loadModule('aurelia-pal-' + type)
-    .then(palModule => type === 'nodejs' && !isInitialized && palModule.globalize() || palModule.initialize());
+               .then(palModule => type === 'nodejs' && !isInitialized && palModule.globalize() || palModule.initialize());
 }
 
 function preparePlatform(loader) {
+
+  const map = (moduleId, relativeTo) => 
+    loader.normalize(moduleId, relativeTo)
+          .then(normalized => {
+            loader.map(moduleId, normalized);
+            return normalized;
+          });
+  
   return initializePal(loader)
     .then(() => loader.normalize('aurelia-bootstrapper'))
     .then(bootstrapperName => {
-      return loader.normalize('aurelia-framework', bootstrapperName)
-        .then(frameworkName => {
-          loader.map('aurelia-framework', frameworkName);
-
-          return Promise.all([
-            loader.normalize('aurelia-dependency-injection', frameworkName)
-              .then(diName => loader.map('aurelia-dependency-injection', diName)),
-            loader.normalize('aurelia-router', bootstrapperName)
-              .then(routerName => loader.map('aurelia-router', routerName)),
-            loader.normalize('aurelia-logging-console', bootstrapperName)
-              .then(loggingConsoleName => loader.map('aurelia-logging-console', loggingConsoleName))
-          ]).then(() => {
-            return loader.loadModule(frameworkName).then(m => Aurelia = m.Aurelia);
-          });
-        });
-    });
+      // aurelia-framework re-exports pretty much everything.
+      // As can be seen at the end of this method, the only field accessed by bootstrapper is `Aurelia`,
+      // so we document that to enable tree shaking on all other exported members.
+      const frameworkPromise = map(PLATFORM.moduleName('aurelia-framework', { exports: ['Aurelia'] }), 
+                                   bootstrapperName);
+      // Please do NOT add PLATFORM.moduleName() around any of those modules.
+      // They are not actually loaded here, only mapped.
+      return Promise.all([
+        frameworkPromise,
+        frameworkPromise.then(frameworkName => map('aurelia-dependency-injection', frameworkName)),
+        map('aurelia-router', bootstrapperName),
+        map('aurelia-logging-console', bootstrapperName),
+      ]);
+    })
+    .then(([frameworkName,]) => loader.loadModule(frameworkName))
+    .then(({ Aurelia }) => startResolve(() => new Aurelia(loader)));
 }
 
-function handleApp(loader, appHost) {
-  const moduleId = appHost.getAttribute('aurelia-app') || appHost.getAttribute('data-aurelia-app');
-  return config(loader, appHost, moduleId);
-}
-
-function config(loader, appHost, configModuleId) {
-  const aurelia = new Aurelia(loader);
+function config(appHost, configModuleId, aurelia) {
   aurelia.host = appHost;
   aurelia.configModuleId = configModuleId || null;
 
   if (configModuleId) {
-    return loader.loadModule(configModuleId).then(customConfig => {
-      if (!customConfig.configure) {
-        throw new Error("Cannot initialize module '" + configModuleId + "' without a configure function.");
-      }
-
-      customConfig.configure(aurelia);
-    });
+    return aurelia.loader
+                  .loadModule(configModuleId)
+                  .then(customConfig => {
+                      if (!customConfig.configure) {
+                        throw new Error(`Cannot initialize module '${configModuleId}' without a configure function.`);
+                      }
+                      return customConfig.configure(aurelia);
+                  });
   }
 
   aurelia.use
-    .standardConfiguration()
-    .developmentLogging();
+         .standardConfiguration()
+         .developmentLogging();
 
   return aurelia.start().then(() => aurelia.setRoot());
 }
 
 function run() {
   return ready()
-    .then(() => createLoader())
-    .then(loader => {
-      return preparePlatform(loader).then(() => {
-        const appHost = host.document.querySelectorAll('[aurelia-app],[data-aurelia-app]');
-        const toConsole = console.error.bind(console);
+    .then(createLoader)
+    .then(preparePlatform)
+    .then(() => {
+      const appHosts = host.document.querySelectorAll('[aurelia-app],[data-aurelia-app]');
+      for (let i = 0, ii = appHosts.length; i < ii; ++i) {
+        const appHost = appHosts[i];
+        const moduleId = appHost.getAttribute('aurelia-app') || appHost.getAttribute('data-aurelia-app');
+        bootstrap(config.bind(null, appHost, moduleId));
+      }
 
-        for (let i = 0, ii = appHost.length; i < ii; ++i) {
-          handleApp(loader, appHost[i]).catch(toConsole);
-        }
-
-        sharedLoader = loader;
-        for (let i = 0, ii = bootstrapQueue.length; i < ii; ++i) {
-          bootstrapQueue[i]();
-        }
-        bootstrapQueue = null;
-      });
+      // This can't be moved before preparePlatform. 
+      // In old IE the console object only exists after F12 tools have been opened and PAL creates a substitute.
+      const toConsole = console.error.bind(console);
+      const bootstraps = bootstrapPromises.map(p => p.catch(toConsole));
+      bootstrapPromises = null;
+      return Promise.all(bootstraps);
     });
 }
 
@@ -176,10 +174,9 @@ function run() {
  * @return A Promise that completes when configuration is done.
  */
 export function bootstrap(configure: Function): Promise<void> {
-  return onBootstrap(loader => {
-    const aurelia = new Aurelia(loader);
-    return configure(aurelia);
-  });
+  const p = startPromise.then(factory => configure(factory()));
+  if (bootstrapPromises) bootstrapPromises.push(p);
+  return p;
 }
 
 /**
