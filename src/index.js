@@ -27,7 +27,7 @@ function ready() {
 
 function createLoader() {
   // Note: Please do NOT add any PLATFORM.moduleName annotation in this method,
-  //       for example around 'aurelia-loader-webpack'.
+  //       for example around 'aurelia-loader-default'.
   //       Each import has been carefully written so that it is picked up by 
   //       its respective bundler and is ignored by others.
   //       Adding moduleName() would add a static dependency, which we don't 
@@ -38,37 +38,41 @@ function createLoader() {
     return Promise.resolve(new PLATFORM.Loader());
   }
 
-  // Webpack Loader Support
-  if (typeof __webpack_require__ !== 'undefined') {
-    // Webpack needs the require to be top level to parse the request.
-    // However, we don't want to use require or that will cause the Babel
-    // transpiler to detect an incorrect dependency.
-    const m = __webpack_require__(require.resolve('aurelia-loader-webpack'));
-    return Promise.resolve(new m.WebpackLoader());
-  }
+  if (typeof AURELIA_WEBPACK_2_0 === 'undefined') {    
 
-  // SystemJS Loader Support
-  if (host.System && typeof host.System.config === 'function') {
-    return host.System.normalize('aurelia-bootstrapper').then(bsn => {
-      return host.System.normalize('aurelia-loader-default', bsn);
-    }).then(loaderName => {
-      return host.System.import(loaderName).then(m => new m.DefaultLoader());
-    });
-  }
+    // Webpack Loader Support
+    if (typeof __webpack_require__ !== 'undefined') {
+      // Webpack needs the require to be top level to parse the request.
+      // However, we don't want to use require or that will cause the Babel
+      // transpiler to detect an incorrect dependency.
+      const m = __webpack_require__(require.resolve('aurelia-loader-webpack'));
+      return Promise.resolve(new m.WebpackLoader());
+    }
 
-  // AMD Module Loader Support
-  if (typeof host.require === 'function' && typeof host.require.version === 'string') {
-    return new Promise((resolve, reject) => host.require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
-  }
+    // SystemJS Loader Support
+    if (host.System && typeof host.System.config === 'function') {
+      return host.System.normalize('aurelia-bootstrapper').then(bsn => {
+        return host.System.normalize('aurelia-loader-default', bsn);
+      }).then(loaderName => {
+        return host.System.import(loaderName).then(m => new m.DefaultLoader());
+      });
+    }
 
-  // Node.js and Electron Support
-  if (isNodeLike && typeof module !== 'undefined' && typeof module.require !== 'undefined') {
-    // note: we use a scoped module.require() instead of simply require()
-    // so that Webpack's parser does not automatically include this loader as a dependency,
-    // similarly to the non-global call to System.import() above
-    const m = module.require('aurelia-loader-nodejs');
-    return Promise.resolve(new m.NodeJsLoader());
-  }
+    // AMD Module Loader Support
+    if (typeof host.require === 'function' && typeof host.require.version === 'string') {
+      return new Promise((resolve, reject) => host.require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
+    }
+
+    // Node.js and Electron Support
+    if (isNodeLike && typeof module !== 'undefined' && typeof module.require !== 'undefined') {
+      // note: we use a scoped module.require() instead of simply require()
+      // so that Webpack's parser does not automatically include this loader as a dependency,
+      // similarly to the non-global call to System.import() above
+      const m = module.require('aurelia-loader-nodejs');
+      return Promise.resolve(new m.NodeJsLoader());
+    }
+
+  } // endif AURELIA_WEBPACK_2_0
 
   return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
 }
