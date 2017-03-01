@@ -3,16 +3,16 @@ import {PLATFORM, isInitialized} from 'aurelia-pal';
 
 let bootstrapPromises = [];
 let startResolve;
-const startPromise = new Promise(resolve => startResolve = resolve);
 
+const startPromise = new Promise(resolve => startResolve = resolve);
 const host = PLATFORM.global;
 const isNodeLike = typeof process !== 'undefined' && !process.browser;
-
 
 function ready() {
   if (!host.document || host.document.readyState === 'complete') {
     return Promise.resolve();
   }
+
   return new Promise(resolve => {
     host.document.addEventListener('DOMContentLoaded', completed);
     host.addEventListener('load', completed);
@@ -28,9 +28,9 @@ function ready() {
 function createLoader() {
   // Note: Please do NOT add any PLATFORM.moduleName annotation in this method,
   //       for example around 'aurelia-loader-default'.
-  //       Each import has been carefully written so that it is picked up by 
+  //       Each import has been carefully written so that it is picked up by
   //       its respective bundler and is ignored by others.
-  //       Adding moduleName() would add a static dependency, which we don't 
+  //       Adding moduleName() would add a static dependency, which we don't
   //       want as the correct loader is determined at build time.
 
   // Custom Loader Support
@@ -38,8 +38,7 @@ function createLoader() {
     return Promise.resolve(new PLATFORM.Loader());
   }
 
-  if (typeof AURELIA_WEBPACK_2_0 === 'undefined') {    
-
+  if (typeof AURELIA_WEBPACK_2_0 === 'undefined') {
     // Webpack Loader Support
     if (typeof __webpack_require__ !== 'undefined') {
       // Webpack needs the require to be top level to parse the request.
@@ -71,7 +70,6 @@ function createLoader() {
       const m = module.require('aurelia-loader-nodejs');
       return Promise.resolve(new m.NodeJsLoader());
     }
-
   } // endif AURELIA_WEBPACK_2_0
 
   return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
@@ -100,21 +98,20 @@ function initializePal(loader) {
 }
 
 function preparePlatform(loader) {
-
-  const map = (moduleId, relativeTo) => 
+  const map = (moduleId, relativeTo) =>
     loader.normalize(moduleId, relativeTo)
           .then(normalized => {
             loader.map(moduleId, normalized);
             return normalized;
           });
-  
+
   return initializePal(loader)
     .then(() => loader.normalize('aurelia-bootstrapper'))
     .then(bootstrapperName => {
       // aurelia-framework re-exports pretty much everything.
       // As can be seen at the end of this method, the only field accessed by bootstrapper is `Aurelia`,
       // so we document that to enable tree shaking on all other exported members.
-      const frameworkPromise = map(PLATFORM.moduleName('aurelia-framework', { exports: ['Aurelia'] }), 
+      const frameworkPromise = map(PLATFORM.moduleName('aurelia-framework', { exports: ['Aurelia'] }),
                                    bootstrapperName);
       // Please do NOT add PLATFORM.moduleName() around any of those modules.
       // They are not actually loaded here, only mapped.
@@ -122,10 +119,10 @@ function preparePlatform(loader) {
         frameworkPromise,
         frameworkPromise.then(frameworkName => map('aurelia-dependency-injection', frameworkName)),
         map('aurelia-router', bootstrapperName),
-        map('aurelia-logging-console', bootstrapperName),
+        map('aurelia-logging-console', bootstrapperName)
       ]);
     })
-    .then(([frameworkName,]) => loader.loadModule(frameworkName))
+    .then(([frameworkName]) => loader.loadModule(frameworkName))
     .then(({ Aurelia }) => startResolve(() => new Aurelia(loader)));
 }
 
@@ -135,13 +132,14 @@ function config(appHost, configModuleId, aurelia) {
 
   if (configModuleId) {
     return aurelia.loader
-                  .loadModule(configModuleId)
-                  .then(customConfig => {
-                      if (!customConfig.configure) {
-                        throw new Error(`Cannot initialize module '${configModuleId}' without a configure function.`);
-                      }
-                      return customConfig.configure(aurelia);
-                  });
+      .loadModule(configModuleId)
+      .then(customConfig => {
+        if (!customConfig.configure) {
+          throw new Error(`Cannot initialize module '${configModuleId}' without a configure function.`);
+        }
+
+        return customConfig.configure(aurelia);
+      });
   }
 
   aurelia.use
@@ -163,7 +161,7 @@ function run() {
         bootstrap(config.bind(null, appHost, moduleId));
       }
 
-      // This can't be moved before preparePlatform. 
+      // This can't be moved before preparePlatform.
       // In old IE the console object only exists after F12 tools have been opened and PAL creates a substitute.
       const toConsole = console.error.bind(console);
       const bootstraps = bootstrapPromises.map(p => p.catch(toConsole));
