@@ -85,7 +85,7 @@ function preparePlatform(loader) {
     const frameworkPromise = map(PLATFORM.moduleName('aurelia-framework', { exports: ['Aurelia'] }), bootstrapperName);
 
     return Promise.all([frameworkPromise, frameworkPromise.then(frameworkName => map('aurelia-dependency-injection', frameworkName)), map('aurelia-router', bootstrapperName), map('aurelia-logging-console', bootstrapperName)]);
-  }).then(([frameworkName]) => loader.loadModule(frameworkName)).then(({ Aurelia }) => startResolve(() => new Aurelia(loader)));
+  }).then(([frameworkName]) => loader.loadModule(frameworkName)).then(fx => startResolve(() => new fx.Aurelia(loader)));
 }
 
 function config(appHost, configModuleId, aurelia) {
