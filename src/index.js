@@ -123,7 +123,7 @@ function preparePlatform(loader) {
       ]);
     })
     .then(([frameworkName]) => loader.loadModule(frameworkName))
-    .then(({ Aurelia }) => startResolve(() => new Aurelia(loader)));
+    .then(fx => startResolve(() => new fx.Aurelia(loader)));
 }
 
 function config(appHost, configModuleId, aurelia) {
