@@ -1,0 +1,4 @@
+{
+  "name": "aurelia-bootstrapper",
+  "main": "dist/aurelia-bootstrapper.d.ts"
+}

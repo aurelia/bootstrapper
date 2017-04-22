@@ -1,5 +1,5 @@
 import 'aurelia-polyfills';
-import {PLATFORM, isInitialized} from 'aurelia-pal';
+import {PLATFORM,isInitialized} from 'aurelia-pal';
 
 let bootstrapPromises = [];
 let startResolve;
