@@ -1,6 +1,6 @@
 {
   "name": "aurelia-bootstrapper",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Sets up the default configuration for the aurelia framework and gets you up and running quick and easy.",
   "keywords": [
     "aurelia",
@@ -29,7 +29,7 @@
     },
     "peerDependencies": {
       "aurelia-event-aggregator": "^1.0.0",
-      "aurelia-framework": "^1.0.0",
+      "aurelia-framework": "^1.3.0",
       "aurelia-history": "^1.1.0",
       "aurelia-history-browser": "^1.1.0",
       "aurelia-loader-default": "^1.0.0",
@@ -38,14 +38,14 @@
       "aurelia-pal-browser": "^1.1.0",
       "aurelia-polyfills": "^1.0.0",
       "aurelia-router": "^1.5.0",
-      "aurelia-templating": "^1.0.0",
+      "aurelia-templating": "^1.8.1",
       "aurelia-templating-binding": "^1.0.0",
-      "aurelia-templating-resources": "^1.0.0",
+      "aurelia-templating-resources": "^1.7.0",
       "aurelia-templating-router": "^1.0.0"
     },
     "dependencies": {
       "aurelia-event-aggregator": "^1.0.0",
-      "aurelia-framework": "^1.0.0",
+      "aurelia-framework": "^1.3.0",
       "aurelia-history": "^1.1.0",
       "aurelia-history-browser": "^1.1.0",
       "aurelia-loader-default": "^1.0.0",
@@ -54,16 +54,16 @@
       "aurelia-pal-browser": "^1.0.0",
       "aurelia-polyfills": "^1.0.0",
       "aurelia-router": "^1.5.0",
-      "aurelia-templating": "^1.0.0",
+      "aurelia-templating": "^1.8.1",
       "aurelia-templating-binding": "^1.0.0",
-      "aurelia-templating-resources": "^1.0.0",
+      "aurelia-templating-resources": "^1.7.0",
       "aurelia-templating-router": "^1.0.0"
     },
     "devDependencies": {}
   },
   "dependencies": {
     "aurelia-event-aggregator": "^1.0.0",
-    "aurelia-framework": "^1.0.0",
+    "aurelia-framework": "^1.3.0",
     "aurelia-history": "^1.1.0",
     "aurelia-history-browser": "^1.1.0",
     "aurelia-loader-default": "^1.0.0",
@@ -72,9 +72,9 @@
     "aurelia-pal-browser": "^1.0.0",
     "aurelia-polyfills": "^1.0.0",
     "aurelia-router": "^1.5.0",
-    "aurelia-templating": "^1.0.0",
+    "aurelia-templating": "^1.8.1",
     "aurelia-templating-binding": "^1.0.0",
-    "aurelia-templating-resources": "^1.0.0",
+    "aurelia-templating-resources": "^1.7.0",
     "aurelia-templating-router": "^1.0.0"
   },
   "devDependencies": {
@@ -122,22 +122,5 @@
     "vinyl": "^1.1.1",
     "vinyl-paths": "^2.1.0",
     "yargs": "^4.8.1"
-  },
-  "aurelia": {
-    "documentation": {
-      "articles": []
-    },
-    "build": {
-      "resources": [
-        "aurelia-framework",
-        "aurelia-logging-console",
-        "aurelia-templating-binding",
-        "aurelia-templating-resources",
-        "aurelia-templating-router",
-        "aurelia-history-browser",
-        "aurelia-event-aggregator",
-        "aurelia-pal-browser"
-      ]
-    }
   }
 }
