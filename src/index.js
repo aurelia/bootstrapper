@@ -58,7 +58,7 @@ function createLoader() {
     }
 
     // AMD Module Loader Support
-    if (typeof host.require === 'function' && typeof host.require.version === 'string') {
+    if (typeof host.require === 'function' && typeof host.define === 'function' && typeof host.define.amd === 'object') {
       return new Promise((resolve, reject) => host.require(['aurelia-loader-default'], m => resolve(new m.DefaultLoader()), reject));
     }
 
