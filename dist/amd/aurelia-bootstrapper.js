@@ -7,6 +7,11 @@ define(['module', 'exports', 'aurelia-pal', 'aurelia-polyfills'], function (modu
   exports.starting = undefined;
   exports.bootstrap = bootstrap;
 
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  };
 
   var bootstrapPromises = [];
   var startResolve = void 0;
@@ -55,7 +60,7 @@ define(['module', 'exports', 'aurelia-pal', 'aurelia-polyfills'], function (modu
         });
       }
 
-      if (typeof host.require === 'function' && typeof host.require.version === 'string') {
+      if (typeof host.require === 'function' && typeof host.define === 'function' && _typeof(host.define.amd) === 'object') {
         return new Promise(function (resolve, reject) {
           return host.require(['aurelia-loader-default'], function (m) {
             return resolve(new m.DefaultLoader());

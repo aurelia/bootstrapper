@@ -4,6 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.starting = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 exports.bootstrap = bootstrap;
 
 require('aurelia-polyfills');
@@ -57,7 +60,7 @@ function createLoader() {
       });
     }
 
-    if (typeof host.require === 'function' && typeof host.require.version === 'string') {
+    if (typeof host.require === 'function' && typeof host.define === 'function' && _typeof(host.define.amd) === 'object') {
       return new Promise(function (resolve, reject) {
         return host.require(['aurelia-loader-default'], function (m) {
           return resolve(new m.DefaultLoader());

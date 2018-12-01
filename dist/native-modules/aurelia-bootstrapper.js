@@ -1,3 +1,5 @@
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 import 'aurelia-polyfills';
 import { PLATFORM, isInitialized } from 'aurelia-pal';
 
@@ -48,7 +50,7 @@ function createLoader() {
       });
     }
 
-    if (typeof host.require === 'function' && typeof host.require.version === 'string') {
+    if (typeof host.require === 'function' && typeof host.define === 'function' && _typeof(host.define.amd) === 'object') {
       return new Promise(function (resolve, reject) {
         return host.require(['aurelia-loader-default'], function (m) {
           return resolve(new m.DefaultLoader());

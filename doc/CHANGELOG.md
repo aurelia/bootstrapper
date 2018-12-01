@@ -1,3 +1,13 @@
+<a name="2.3.1"></a>
+## [2.3.1](https://github.com/aurelia/bootstrapper/compare/2.3.0...2.3.1) (2018-12-01)
+
+
+### Bug Fixes
+
+* **loader:** Use better detection of amd loaders ([1b98576](https://github.com/aurelia/bootstrapper/commit/1b98576))
+
+
+
 <a name="2.3.0"></a>
 # [2.3.0](https://github.com/aurelia/bootstrapper/compare/2.2.0...2.3.0) (2018-07-02)
 

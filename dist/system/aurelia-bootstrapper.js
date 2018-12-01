@@ -3,8 +3,7 @@
 System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _context) {
   "use strict";
 
-  var PLATFORM, isInitialized, bootstrapPromises, startResolve, startPromise, host, isNodeLike, starting;
-
+  var PLATFORM, isInitialized, _typeof, bootstrapPromises, startResolve, startPromise, host, isNodeLike, starting;
 
   function ready() {
     if (!host.document || host.document.readyState === 'complete') {
@@ -44,7 +43,7 @@ System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _contex
         });
       }
 
-      if (typeof host.require === 'function' && typeof host.require.version === 'string') {
+      if (typeof host.require === 'function' && typeof host.define === 'function' && _typeof(host.define.amd) === 'object') {
         return new Promise(function (resolve, reject) {
           return host.require(['aurelia-loader-default'], function (m) {
             return resolve(new m.DefaultLoader());
@@ -162,6 +161,11 @@ System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _contex
       isInitialized = _aureliaPal.isInitialized;
     }],
     execute: function () {
+      _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+        return typeof obj;
+      } : function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
       bootstrapPromises = [];
       startResolve = void 0;
       startPromise = new Promise(function (resolve) {
