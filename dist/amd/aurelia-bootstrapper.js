@@ -78,6 +78,8 @@ define(['module', 'exports', 'aurelia-pal', 'aurelia-polyfills'], function (modu
   }
 
   function initializePal(loader) {
+    if (_aureliaPal.isInitialized) return Promise.resolve();
+
     var type = void 0;
 
     var isRenderer = isNodeLike && (process.type === 'renderer' || process.versions['node-webkit']);

@@ -68,6 +68,8 @@ function createLoader() {
 }
 
 function initializePal(loader) {
+  if (isInitialized) return Promise.resolve();
+
   var type = void 0;
 
   var isRenderer = isNodeLike && (process.type === 'renderer' || process.versions['node-webkit']);

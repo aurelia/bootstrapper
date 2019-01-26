@@ -1,3 +1,13 @@
+<a name="2.3.2"></a>
+## [2.3.2](https://github.com/aurelia/bootstrapper/compare/2.3.1...2.3.2) (2019-01-26)
+
+
+### Bug Fixes
+
+* avoid unnecessary pal loading when pal is already initialized ([429c261](https://github.com/aurelia/bootstrapper/commit/429c261)), closes [aurelia/cli#1019](https://github.com/aurelia/cli/issues/1019)
+
+
+
 <a name="2.3.1"></a>
 ## [2.3.1](https://github.com/aurelia/bootstrapper/compare/2.3.0...2.3.1) (2018-12-01)
 
