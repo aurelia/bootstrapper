@@ -1,6 +1,6 @@
 {
   "name": "aurelia-bootstrapper",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "Sets up the default configuration for the aurelia framework and gets you up and running quick and easy.",
   "keywords": [
     "aurelia",
@@ -29,27 +29,10 @@
   ],
   "jspm": {
     "registry": "npm",
-    "jspmPackage": true,
     "main": "aurelia-bootstrapper",
     "format": "amd",
     "directories": {
       "dist": "dist/amd"
-    },
-    "peerDependencies": {
-      "aurelia-event-aggregator": "^1.0.0",
-      "aurelia-framework": "^1.3.0",
-      "aurelia-history": "^1.1.0",
-      "aurelia-history-browser": "^1.1.0",
-      "aurelia-loader-default": "^1.0.0",
-      "aurelia-logging-console": "^1.0.0",
-      "aurelia-pal": "^1.3.0",
-      "aurelia-pal-browser": "^1.1.0",
-      "aurelia-polyfills": "^1.0.0",
-      "aurelia-router": "^1.5.0",
-      "aurelia-templating": "^1.8.1",
-      "aurelia-templating-binding": "^1.0.0",
-      "aurelia-templating-resources": "^1.7.0",
-      "aurelia-templating-router": "^1.0.0"
     },
     "dependencies": {
       "aurelia-event-aggregator": "^1.0.0",
@@ -83,7 +66,8 @@
     "aurelia-templating": "^1.8.1",
     "aurelia-templating-binding": "^1.0.0",
     "aurelia-templating-resources": "^1.7.0",
-    "aurelia-templating-router": "^1.0.0"
+    "aurelia-templating-router": "^1.0.0",
+    "jspm": "^0.16.53"
   },
   "devDependencies": {
     "aurelia-tools": "^0.2.4",
