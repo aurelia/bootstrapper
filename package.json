@@ -7,6 +7,11 @@
     "bootstrapper",
     "spa"
   ],
+  "scripts": {
+    "test": "karma start --single-run",
+    "build": "gulp build",
+    "cut-release": "gulp prepare-release"
+  },
   "homepage": "http://aurelia.io",
   "bugs": {
     "url": "https://github.com/aurelia/bootstrapper/issues"
