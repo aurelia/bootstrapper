@@ -71,8 +71,7 @@
     "aurelia-templating": "^1.8.1",
     "aurelia-templating-binding": "^1.0.0",
     "aurelia-templating-resources": "^1.7.0",
-    "aurelia-templating-router": "^1.0.0",
-    "jspm": "^0.16.53"
+    "aurelia-templating-router": "^1.0.0"
   },
   "devDependencies": {
     "aurelia-tools": "^0.2.4",
