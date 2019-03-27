@@ -1,3 +1,8 @@
+<a name="2.3.3"></a>
+## [2.3.3](https://github.com/aurelia/bootstrapper/compare/2.3.2...2.3.3) (2019-02-04)
+
+
+
 <a name="2.3.2"></a>
 ## [2.3.2](https://github.com/aurelia/bootstrapper/compare/2.3.1...2.3.2) (2019-01-26)
 
