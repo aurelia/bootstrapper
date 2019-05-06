@@ -20,7 +20,7 @@ define(['module', 'exports', 'aurelia-pal', 'aurelia-polyfills'], function (modu
     return startResolve = resolve;
   });
   var host = _aureliaPal.PLATFORM.global;
-  var isNodeLike = typeof process !== 'undefined' && !process.browser;
+  var isNodeLike = typeof process !== 'undefined' && typeof process.type !== 'undefined' && typeof process.versions !== 'undefined';
 
   function ready() {
     if (!host.document || host.document.readyState === 'complete') {

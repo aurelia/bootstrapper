@@ -10,7 +10,7 @@ var startPromise = new Promise(function (resolve) {
   return startResolve = resolve;
 });
 var host = PLATFORM.global;
-var isNodeLike = typeof process !== 'undefined' && !process.browser;
+var isNodeLike = typeof process !== 'undefined' && typeof process.type !== 'undefined' && typeof process.versions !== 'undefined';
 
 function ready() {
   if (!host.document || host.document.readyState === 'complete') {
