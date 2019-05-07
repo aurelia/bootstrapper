@@ -174,7 +174,7 @@ System.register(['aurelia-polyfills', 'aurelia-pal'], function (_export, _contex
         return startResolve = resolve;
       });
       host = PLATFORM.global;
-      isNodeLike = typeof process !== 'undefined' && typeof process.type !== 'undefined' && typeof process.versions !== 'undefined';
+      isNodeLike = typeof process !== 'undefined' && !process.browser;
 
       _export('starting', starting = run());
 

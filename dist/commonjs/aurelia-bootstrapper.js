@@ -20,7 +20,7 @@ var startPromise = new Promise(function (resolve) {
   return startResolve = resolve;
 });
 var host = _aureliaPal.PLATFORM.global;
-var isNodeLike = typeof process !== 'undefined' && typeof process.type !== 'undefined' && typeof process.versions !== 'undefined';
+var isNodeLike = typeof process !== 'undefined' && !process.browser;
 
 function ready() {
   if (!host.document || host.document.readyState === 'complete') {
