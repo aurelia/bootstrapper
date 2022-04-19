@@ -1,7 +1,6 @@
-import * as auModule from 'aurelia-framework';
+import 'aurelia-polyfills';
 import { Aurelia, Loader } from 'aurelia-framework';
 import { isInitialized, PLATFORM } from 'aurelia-pal';
-import 'aurelia-polyfills';
 
 type RuntimeProcess = typeof process & { browser: any; type: string; };
 type AureliaFactoryFn = () => Aurelia;
@@ -130,7 +129,7 @@ function preparePlatform(loader: Loader) {
       ]);
     })
     .then(([frameworkName]) => loader.loadModule(frameworkName))
-    .then((fx: typeof auModule) => startResolve(() => new fx.Aurelia(loader)));
+    .then((fx: typeof import('aurelia-framework')) => startResolve(() => new fx.Aurelia(loader)));
 }
 
 function config(appHost: Element, configModuleId: string, aurelia: Aurelia): Promise<Aurelia> {

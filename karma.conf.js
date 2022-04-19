@@ -1,4 +1,5 @@
 const path = require('path');
+const { AureliaPlugin } = require('aurelia-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports =
@@ -46,6 +47,11 @@ function(config) {
         ]
       },
       plugins: [
+        new AureliaPlugin({
+          aureliaApp: undefined,
+          noWebpackLoader: true,
+          dist: 'es2015'
+        }),
         new webpack.SourceMapDevToolPlugin({
           test: /\.(ts|js|css)($|\?)/i
         })
