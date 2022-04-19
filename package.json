@@ -9,8 +9,18 @@
   ],
   "scripts": {
     "test": "karma start --single-run",
-    "build": "gulp build",
-    "cut-release": "gulp prepare-release"
+    "test:watch": "karma start",
+    "test:debugger": "karma start --browsers ChromeDebugging",
+    "lint": "eslint .",
+    "build": "rollup -c",
+    "build:dts": "dts-bundle-generator -o dist/types/aurelia-bootstrapper.d.ts src/aurelia-bootstrapper.ts",
+    "postbuild": "npm run build:dts",
+    "typedoc": "typedoc src/aurelia-templating.ts --json doc/api.json",
+    "posttypedoc": "node doc/cleanup.js",
+    "changelog": "standard-version -t \"\" -i doc/CHANGELOG.md -s --skip.commit --skip.tag",
+    "precut-release": "npm run test && npm run lint && npm run build",
+    "cut-release": "npm run changelog",
+    "postcut-release": "npm run typedoc"
   },
   "homepage": "http://aurelia.io",
   "bugs": {
@@ -19,7 +29,7 @@
   "license": "MIT",
   "author": "Rob Eisenberg <rob@bluespire.com> (http://robeisenberg.com/)",
   "main": "dist/commonjs/aurelia-bootstrapper.js",
-  "typings": "dist/aurelia-bootstrapper.d.ts",
+  "typings": "dist/types/aurelia-bootstrapper.d.ts",
   "repository": {
     "type": "git",
     "url": "http://github.com/aurelia/bootstrapper"
@@ -49,9 +59,11 @@
     "aurelia-templating-router": "^1.5.0"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^8.3.2",
     "@types/node": "^17.0.25",
     "aurelia-tools": "^0.2.4",
     "del": "^2.2.1",
+    "dts-bundle-generator": "^6.7.0",
     "gulp": "^3.9.1",
     "gulp-bump": "^2.2.0",
     "gulp-concat": "^2.6.0",
@@ -72,6 +84,7 @@
     "merge2": "^1.0.2",
     "object.assign": "^4.0.4",
     "require-dir": "^0.3.0",
+    "rollup": "^2.70.2",
     "run-sequence": "^1.2.2",
     "through2": "^2.0.1",
     "tslib": "^2.3.1",

@@ -1,7 +1,7 @@
-import 'aurelia-polyfills';
-import {PLATFORM, isInitialized} from 'aurelia-pal';
-import { Aurelia, Loader } from 'aurelia-framework';
 import * as auModule from 'aurelia-framework';
+import { Aurelia, Loader } from 'aurelia-framework';
+import { isInitialized, PLATFORM } from 'aurelia-pal';
+import 'aurelia-polyfills';
 
 type RuntimeProcess = typeof process & { browser: any; type: string; };
 type AureliaFactoryFn = () => Aurelia;
@@ -183,6 +183,7 @@ function run() {
  * @return A Promise that completes when configuration is done.
  */
 export function bootstrap(configure: (aurelia: Aurelia) => any): Promise<void>;
+export function bootstrap(configure: Function): Promise<void>;
 export function bootstrap(configure: Function): Promise<void> {
   const p = startPromise.then(factory => configure(factory()));
   if (bootstrapPromises) bootstrapPromises.push(p);
