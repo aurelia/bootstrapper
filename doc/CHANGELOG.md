@@ -1,3 +1,14 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [2.4.0](https://github.com/aurelia/bootstrapper/compare/2.3.3...2.4.0) (2022-04-19)
+
+
+### Bug Fixes
+
+* **deps:** resolve vulnerable dep issue ([45dcea1](https://github.com/aurelia/bootstrapper/commit/45dcea16bfc9fad2f3056f93b3b1efb6a21046e0))
+
 <a name="2.3.4"></a>
 ## [2.3.4](https://github.com/aurelia/bootstrapper/compare/2.3.2...2.3.4) (2019-03-27)
 
