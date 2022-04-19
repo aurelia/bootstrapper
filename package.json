@@ -15,7 +15,7 @@
     "build": "rollup -c",
     "build:dts": "dts-bundle-generator -o dist/types/aurelia-bootstrapper.d.ts src/aurelia-bootstrapper.ts",
     "postbuild": "npm run build:dts",
-    "typedoc": "typedoc src/aurelia-templating.ts --json doc/api.json",
+    "typedoc": "typedoc src/aurelia-bootstrapper.ts --json doc/api.json",
     "posttypedoc": "node doc/cleanup.js",
     "changelog": "standard-version -t \"\" -i doc/CHANGELOG.md -s --skip.commit --skip.tag",
     "precut-release": "npm run test && npm run lint && npm run build",
@@ -36,8 +36,8 @@
   },
   "files": [
     "dist",
-    "doc",
     "src",
+    "doc/CHANGELOG.md",
     "typings.json",
     "README.md",
     "LICENSE"
@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.3.2",
+    "@types/estree": "^0.0.51",
     "@types/jasmine": "^4.0.3",
     "@types/node": "^17.0.25",
     "dts-bundle-generator": "^6.7.0",
