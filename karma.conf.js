@@ -1,81 +1,82 @@
-// Karma configuration
-// Generated on Fri Dec 05 2014 16:49:29 GMT-0500 (EST)
+const path = require('path');
+const { AureliaPlugin } = require('aurelia-webpack-plugin');
+const webpack = require('webpack');
 
-module.exports = function(config) {
+module.exports =
+/**
+ * @param {import('karma').Config} config
+ */
+function(config) {
+  const browsers = config.browsers;
   config.set({
-
-    // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
-
-
-    // frameworks to use
-    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jspm', 'jasmine'],
-
-    jspm: {
-      // Edit this to your needs
-      loadFiles: ['src/**/*.js', 'test/**/*.js']
-    },
-
-
-    // list of files / patterns to load in the browser
-    files: [],
-
-
-    // list of files to exclude
-    exclude: [
-    ],
-
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+    frameworks: ['jasmine'],
+    files: ["test/**/*.spec.ts"],
     preprocessors: {
-      'test/**/*.js': ['babel'],
-      'src/**/*.js': ['babel']
+      "test/**/*.spec.ts": ["webpack", 'sourcemap']
     },
-    'babelPreprocessor': {
-      options: {
-        sourceMap: 'inline',
-        presets: [ 'es2015-loose', 'stage-1'],
-        plugins: [
-          'syntax-flow',
-          'transform-decorators-legacy',
-          'transform-flow-strip-types'
+    webpack: {
+      mode: 'development',
+      resolve: {
+        extensions: ['.ts', '.js'],
+        modules: [path.resolve(__dirname, 'node_modules')],
+        alias: {
+          src: path.resolve(__dirname, 'src'),
+          // aliasing to this in test folder, instead of src folder
+          // to avoid colliding with the legacy build script
+          'aurelia-bootstrapper': path.resolve(__dirname, 'src/aurelia-bootstrapper'),
+          test: path.resolve(__dirname, 'test')
+        }
+      },
+      performance: {
+        hints: false
+      },
+      devtool: Array.isArray(browsers) && browsers.includes('ChromeDebugging') ? 'inline-source-map' : 'inline-source-map',
+      module: {
+        rules: [
+          {
+            test: /\.[jt]s$/,
+            use: [
+              {
+                loader: 'ts-loader',
+                options: {}
+              }
+            ],
+            exclude: /node_modules/
+          }
         ]
+      },
+      plugins: [
+        new AureliaPlugin({
+          aureliaApp: undefined,
+          noWebpackLoader: true,
+          dist: 'es2015'
+        }),
+        new webpack.SourceMapDevToolPlugin({
+          test: /\.(ts|js|css)($|\?)/i
+        })
+      ]
+    },
+    mime: {
+      'text/x-typescript': ['ts']
+    },
+    logLevel: config.LOG_ERROR, // to disable the WARN 404 for image requests
+    reporters: ['progress'],
+    webpackServer: { noInfo: true },
+    browsers: Array.isArray(browsers) && browsers.length > 0 ? browsers : ['ChromeHeadless'],
+    customLaunchers: {
+      ChromeDebugging: {
+        base: 'Chrome',
+        flags: [
+          '--remote-debugging-port=9333'
+        ],
+        debug: true
       }
     },
+    mochaReporter: {
+      ignoreSkipped: true
+    },
 
-
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
-
-
-    // web server port
-    port: 9876,
-
-
-    // enable / disable colors in the output (reporters and logs)
-    colors: true,
-
-
-    // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
-
-
-    // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
-
-
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
-
-
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
     singleRun: false
   });
 };

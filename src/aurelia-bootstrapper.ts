@@ -1,19 +1,23 @@
 import 'aurelia-polyfills';
-import {PLATFORM,isInitialized} from 'aurelia-pal';
+import { Aurelia, Loader } from 'aurelia-framework';
+import { isInitialized, PLATFORM } from 'aurelia-pal';
+
+type RuntimeProcess = typeof process & { browser: any; type: string; };
+type AureliaFactoryFn = () => Aurelia;
 
 let bootstrapPromises = [];
-let startResolve;
+let startResolve: (value: AureliaFactoryFn | Promise<AureliaFactoryFn>) => void;
 
-const startPromise = new Promise(resolve => startResolve = resolve);
+const startPromise = new Promise<AureliaFactoryFn>(resolve => startResolve = resolve);
 const host = PLATFORM.global;
-const isNodeLike = typeof process !== 'undefined' && !process.browser;
+const isNodeLike = typeof process !== 'undefined' && !(process as RuntimeProcess).browser;
 
 function ready() {
   if (!host.document || host.document.readyState === 'complete') {
     return Promise.resolve();
   }
 
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     host.document.addEventListener('DOMContentLoaded', completed);
     host.addEventListener('load', completed);
 
@@ -75,12 +79,12 @@ function createLoader() {
   return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
 }
 
-function initializePal(loader) {
+function initializePal(loader: Loader) {
   if (isInitialized) return Promise.resolve();
 
   let type;
 
-  const isRenderer = isNodeLike && (process.type === 'renderer' || process.versions['node-webkit']);
+  const isRenderer = isNodeLike && ((process as RuntimeProcess).type === 'renderer' || process.versions['node-webkit']);
 
   if (isNodeLike && !isRenderer) {
     type = 'nodejs';
@@ -99,7 +103,7 @@ function initializePal(loader) {
                .then(palModule => type === 'nodejs' && !isInitialized && palModule.globalize() || palModule.initialize());
 }
 
-function preparePlatform(loader) {
+function preparePlatform(loader: Loader) {
   const map = (moduleId, relativeTo) =>
     loader.normalize(moduleId, relativeTo)
           .then(normalized => {
@@ -125,10 +129,10 @@ function preparePlatform(loader) {
       ]);
     })
     .then(([frameworkName]) => loader.loadModule(frameworkName))
-    .then(fx => startResolve(() => new fx.Aurelia(loader)));
+    .then((fx: typeof import('aurelia-framework')) => startResolve(() => new fx.Aurelia(loader)));
 }
 
-function config(appHost, configModuleId, aurelia) {
+function config(appHost: Element, configModuleId: string, aurelia: Aurelia): Promise<Aurelia> {
   aurelia.host = appHost;
   aurelia.configModuleId = configModuleId || null;
 
@@ -159,8 +163,8 @@ function run() {
       const appHosts = host.document.querySelectorAll('[aurelia-app],[data-aurelia-app]');
       for (let i = 0, ii = appHosts.length; i < ii; ++i) {
         const appHost = appHosts[i];
-        const moduleId = appHost.getAttribute('aurelia-app') || appHost.getAttribute('data-aurelia-app');
-        bootstrap(config.bind(null, appHost, moduleId));
+        const mainModuleId = appHost.getAttribute('aurelia-app') || appHost.getAttribute('data-aurelia-app');
+        bootstrap(config.bind(null, appHost, mainModuleId));
       }
 
       // This can't be moved before preparePlatform.
@@ -177,6 +181,8 @@ function run() {
  * @param configure A callback which passes an Aurelia instance to the developer to manually configure and start up the app.
  * @return A Promise that completes when configuration is done.
  */
+export function bootstrap(configure: (aurelia: Aurelia) => any): Promise<void>;
+export function bootstrap(configure: Function): Promise<void>;
 export function bootstrap(configure: Function): Promise<void> {
   const p = startPromise.then(factory => configure(factory()));
   if (bootstrapPromises) bootstrapPromises.push(p);
@@ -188,3 +194,24 @@ export function bootstrap(configure: Function): Promise<void> {
  * It resolves when the process has finished starting.
  */
 export const starting = run();
+
+/** @internal */
+declare global {
+  const AURELIA_WEBPACK_2_0: any;
+  const __webpack_require__: Function;
+}
+
+/** @internal */
+declare module 'aurelia-framework' {
+  interface Aurelia {
+    configModuleId: string;
+  }
+}
+
+/** @internal */
+declare module 'aurelia-loader' {
+  interface Loader {
+    // overload
+    normalize(moduleId: string): Promise<string>;
+  }
+}
