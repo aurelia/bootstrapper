@@ -52,7 +52,7 @@ export default [
     'aurelia-binding',
     'aurelia-dependency-injection',
     'aurelia-pal',
-    // 'aurelia-templating',
+    'aurelia-polyfills',
     'aurelia-templating-resources',
     'aurelia-task-queue',
     'aurelia-logging',
@@ -63,7 +63,7 @@ export default [
   config.output.forEach(output => output.sourcemap = true);
   config.onwarn = /** @param {import('rollup').RollupWarning} warning */ (warning, warn) => {
     if (warning.code === 'CIRCULAR_DEPENDENCY') return;
-    warn(warning.message);
+    warn(warning);
   };
 
   return config;
